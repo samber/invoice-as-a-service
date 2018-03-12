@@ -10,7 +10,7 @@ This service generates professional looking PDF invoices, from a simple POST HTT
 
 I provide invoice-as-a-service with a full hosted environment for fast and easy setup.
 
-You can also deploy the project on your own infrastructure for free, for improved privacy.
+For improved privacy, you can also deploy the project on your own infrastructure for free.
 
 ### Hosted
 
