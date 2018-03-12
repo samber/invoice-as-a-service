@@ -2,6 +2,10 @@
 
 This service generates professional looking PDF invoices, from a simple POST HTTP request with json payload.
 
+## Example
+
+![Screenshot](/example.png)
+
 ## Usage
 
 I provide invoice-as-a-service with a full hosted environment for fast and easy setup.
