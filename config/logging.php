@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'default' => 'errorlog',
+    'default' => getenv('APP_LOG') ? getenv('APP_LOG') : 'errorlog',
 
     /*
     |--------------------------------------------------------------------------
@@ -38,13 +38,13 @@ return [
         'single' => [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),
-            'level' => 'debug',
+            'level' => getenv('LOG_LEVEL') ? getenv('LOG_LEVEL') : 'debug',
         ],
 
         'daily' => [
             'driver' => 'daily',
             'path' => storage_path('logs/laravel.log'),
-            'level' => 'debug',
+            'level' => getenv('LOG_LEVEL') ? getenv('LOG_LEVEL') : 'debug',
             'days' => 7,
         ],
 
@@ -53,17 +53,17 @@ return [
             'url' => env('LOG_SLACK_WEBHOOK_URL'),
             'username' => 'Laravel Log',
             'emoji' => ':boom:',
-            'level' => 'critical',
+            'level' => getenv('LOG_LEVEL') ? getenv('LOG_LEVEL') : 'debug',
         ],
 
         'syslog' => [
             'driver' => 'syslog',
-            'level' => 'debug',
+            'level' => getenv('LOG_LEVEL') ? getenv('LOG_LEVEL') : 'debug',
         ],
 
         'errorlog' => [
             'driver' => 'errorlog',
-            'level' => 'debug',
+            'level' => getenv('LOG_LEVEL') ? getenv('LOG_LEVEL') : 'debug',
         ],
     ],
 

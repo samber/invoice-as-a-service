@@ -26,7 +26,7 @@ return [
     |
     */
 
-    'env' =>getenv('ENV') ? getenv('ENV') : 'production',
+    'env' => getenv('ENV') ? getenv('ENV') : 'production',
 
     /*
     |--------------------------------------------------------------------------
