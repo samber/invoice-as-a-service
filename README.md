@@ -90,7 +90,7 @@ $ curl "http://localhost:8000/api/invoice/generate" \
 | **customer** | object | yes | Customer infos | Customer(...) |
 | **company** | object | yes | Company infos | Company(...) |
 
-**Item**:
+### Item:
 
 | Property | Type | Required | Description | Example |
 | --- | --- | :---: | --- | --- |
@@ -100,7 +100,7 @@ $ curl "http://localhost:8000/api/invoice/generate" \
 | **quantity** | float | no | Product or service quantity (default: 1) | 1 |
 | **tax** | float | no | Tax rate (default: 0) | 1 |
 
-**Customer**:
+### Customer:
 
 | Property | Type | Required | Description | Example |
 | --- | --- | :---: | --- | --- |
@@ -112,7 +112,7 @@ $ curl "http://localhost:8000/api/invoice/generate" \
 | **phone** | string | no | Customer phone number | "1-888-548-0034" |
 | **email** | string | no | Customer email address | "john@gmail.com" |
 
-**Company**:
+### Company:
 
 | Property | Type | Required | Description | Example |
 | --- | --- | :---: | --- | --- |
