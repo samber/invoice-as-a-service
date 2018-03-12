@@ -1,6 +1,12 @@
 # Invoice as a service
 
+This service generates professional looking PDF invoices, from a simple POST HTTP request with json payload.
+
 ## Usage
+
+I provide invoice-as-a-service with a full hosted environment for fast and easy setup.
+
+You can also deploy the project on your own infrastructure for free, for improved privacy.
 
 ### Hosted
 
@@ -113,3 +119,13 @@ $ curl "http://localhost:8000/api/invoice/generate" \
 | email | string | no | Customer email address | "billing@bienavous.io" |
 | logo | string | no | URL of your company logo | "https://acme.corp/logo.png" |
 | siret | integer | no | French company identification number | 53913810700021 |
+
+## Notes
+
+The logo (optional) used by the API must be accessible from API !
+
+## Contribute
+
+Fuck yeah!
+
+Clone + pull-request. I usually reply in hours or days ;)
