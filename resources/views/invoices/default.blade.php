@@ -25,7 +25,7 @@
             </div>
         </div>
         <br />
-        <h2>#{{ $data->id }}</h2>
+        <!-- <h2>#{{ $data->id }}</h2> -->
         <div style="clear:both; position:relative;">
             <div style="position:absolute; left:0pt; width:250pt;">
                 <h4>Business Details:</h4>
