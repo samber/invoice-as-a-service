@@ -1,6 +1,11 @@
+# Invoice as a service
 
+## Usage
 
-curl "localhost:8000/api/invoice/generate" \
+### Hosted
+
+```sh
+$ curl "https://invoice-as-a-service.cleverapps.io/api/invoice/generate" \
      -X POST -H "content-type: application/json" \
      -d '{
         "id": "42",
@@ -44,7 +49,19 @@ curl "localhost:8000/api/invoice/generate" \
         }
 
      }'
+```
 
+### Self hosted
+
+```sh
+$ php artisan serve
+```
+
+```sh
+$ curl "http://localhost:8000/api/invoice/generate" \
+     -X POST -H "content-type: application/json" \
+     -d '{ ... }'
+```
 
 ## Properties
 
