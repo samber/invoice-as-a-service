@@ -23,36 +23,36 @@ class InvoiceController extends Controller
             'due_date' => 'required|integer|min:0|max:2147483647',
 
             // optional
-            'decimals' => 'sometimes|required|integer|min:0|max:10',
-            'notes' => 'sometimes|required|string|max:65535',
+            'decimals' => 'nullable|integer|min:0|max:10',
+            'notes' => 'nullable|string|max:65535',
 
             // items
             'items' => 'required|array|min:1',
             'items.*.title' => 'required|string|min:3|max:255',
-            'items.*.description' => 'sometimes|required|string|min:3|max:255',
+            'items.*.description' => 'nullable|string|min:3|max:255',
             'items.*.price' => 'required|numeric|min:0',
-            'items.*.quantity' => 'sometimes|required|numeric|min:0',
+            'items.*.quantity' => 'nullable|numeric|min:0',
             'items.*.tax' => 'required|numeric',
 
             // customer
             'customer.summary' => 'required|string|min:2|max:255',
             'customer.address_line_1' => 'required|string|min:1|max:255',
-            'customer.address_line_2' => 'sometimes|required|string|min:1|max:255',
-            'customer.address_line_3' => 'sometimes|required|string|min:1|max:255',
-            'customer.address_line_4' => 'sometimes|required|string|min:1|max:255',
-            'customer.phone' => 'sometimes|required|string|min:3|max:255',
-            'customer.email' => 'sometimes|required|email|min:3|max:255',
+            'customer.address_line_2' => 'nullable|string|min:1|max:255',
+            'customer.address_line_3' => 'nullable|string|min:1|max:255',
+            'customer.address_line_4' => 'nullable|string|min:1|max:255',
+            'customer.phone' => 'nullable|string|min:3|max:255',
+            'customer.email' => 'nullable|email|min:3|max:255',
 
             // company
             'company.summary' => 'required|string|min:2|max:255',
             'company.address_line_1' => 'required|string|min:1|max:255',
-            'company.address_line_2' => 'sometimes|required|string|min:1|max:255',
-            'company.address_line_3' => 'sometimes|required|string|min:1|max:255',
-            'company.address_line_4' => 'sometimes|required|string|min:1|max:255',
-            'company.phone' => 'sometimes|required|string|min:3|max:255',
-            'company.email' => 'sometimes|required|email|min:3|max:255',
-            'company.logo' => 'sometimes|required|string|max:255',
-            'company.siret' => 'sometimes|required|string|min:3|max:255',
+            'company.address_line_2' => 'nullable|string|min:1|max:255',
+            'company.address_line_3' => 'nullable|string|min:1|max:255',
+            'company.address_line_4' => 'nullable|string|min:1|max:255',
+            'company.phone' => 'nullable|string|min:3|max:255',
+            'company.email' => 'nullable|email|min:3|max:255',
+            'company.logo' => 'nullable|string|max:255',
+            'company.siret' => 'nullable|string|min:3|max:255',
         ]);
 
         if ($validator->fails())
