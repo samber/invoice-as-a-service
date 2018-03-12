@@ -69,8 +69,9 @@ class InvoiceController extends Controller
             if ($item['quantity'] == NULL)
                 $data['items'][$i]['quantity'] = 1;
 
+            $tax_rate = $item['tax'] == NULL ? 0 : $item['tax'];
             $amount = round($item['price'] * $data['items'][$i]['quantity'], $decimals);
-            $tax = round($amount * $item['tax'] / 100, $decimals);
+            $tax = round($amount * $tax_rate / 100, $decimals);
 
             $data['items'][$i]['total'] = $amount;
             $sub_total += $amount;
