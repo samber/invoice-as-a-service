@@ -128,10 +128,12 @@ $ curl "http://localhost:8000/api/invoice/generate" \
 
 ## Notes
 
-The logo (optional) used by the API must be accessible by `invoice-as-a-service` !
+The provided logo (optional) must be accessible from the `invoice-as-a-service` API !
 
 ## Contribute
 
 Fuck yeah!
 
-Clone + pull-request. I usually reply in hours or days ;)
+Clone + pull-request.
+
+I usually reply in hours or days ;)
