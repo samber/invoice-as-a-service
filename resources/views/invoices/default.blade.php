@@ -11,7 +11,7 @@
     <body>
         <div style="clear:both; position:relative;">
             <div style="position:absolute; left:0pt; width:250pt;">
-                @if (array_key_exists('logo', $data->company))
+                @if (array_key_exists('logo', $data->company) && strlen($data->company['logo']) > 0)
                     <img class="img-rounded" style="max-width:250pt;max-height:100pt" src="{{ $data->company['logo'] }}">
                 @endif
             </div>
@@ -35,16 +35,16 @@
 
                         <br/><br/>
 
-                        {!! array_key_exists('address_line_1', $data->company) ? $data->company['address_line_1'] . '<br/>' : '' !!}
-                        {!! array_key_exists('address_line_2', $data->company) ? $data->company['address_line_2'] . '<br/>' : '' !!}
-                        {!! array_key_exists('address_line_3', $data->company) ? $data->company['address_line_3'] . '<br/>' : '' !!}
-                        {!! array_key_exists('address_line_4', $data->company) ? $data->company['address_line_4'] . '<br/>' : '' !!}
+                        {!! array_key_exists('address_line_1', $data->company) && strlen($data->company['address_line_1']) > 0 ? $data->company['address_line_1'] . '<br/>' : '' !!}
+                        {!! array_key_exists('address_line_2', $data->company) && strlen($data->company['address_line_2']) > 0 ? $data->company['address_line_2'] . '<br/>' : '' !!}
+                        {!! array_key_exists('address_line_3', $data->company) && strlen($data->company['address_line_3']) > 0 ? $data->company['address_line_3'] . '<br/>' : '' !!}
+                        {!! array_key_exists('address_line_4', $data->company) && strlen($data->company['address_line_4']) > 0 ? $data->company['address_line_4'] . '<br/>' : '' !!}
 
                         <br/>
 
-                        {!! array_key_exists('phone', $data->company) ? 'Phone: ' . $data->company['phone'] . '<br/>' : '' !!}
-                        {!! array_key_exists('email', $data->company) ? 'Email: ' . $data->company['email'] . '<br/>' : '' !!}
-                        {!! array_key_exists('siret', $data->company) ? 'SIRET: ' . $data->company['siret'] . '<br/>' : '' !!}
+                        {!! array_key_exists('phone', $data->company) && strlen($data->company['phone']) > 0 ? 'Phone: ' . $data->company['phone'] . '<br/>' : '' !!}
+                        {!! array_key_exists('email', $data->company) && strlen($data->company['email']) > 0 ? 'Email: ' . $data->company['email'] . '<br/>' : '' !!}
+                        {!! array_key_exists('siret', $data->company) && strlen($data->company['siret']) > 0 ? 'SIRET: ' . $data->company['siret'] . '<br/>' : '' !!}
                     </div>
                 </div>
             </div>
@@ -56,15 +56,15 @@
 
                     <br/><br/>
 
-                    {!! array_key_exists('address_line_1', $data->customer) ? $data->customer['address_line_1'] . '<br/>' : '' !!}
-                    {!! array_key_exists('address_line_2', $data->customer) ? $data->customer['address_line_2'] . '<br/>' : '' !!}
-                    {!! array_key_exists('address_line_3', $data->customer) ? $data->customer['address_line_3'] . '<br/>' : '' !!}
-                    {!! array_key_exists('address_line_4', $data->customer) ? $data->customer['address_line_4'] . '<br/>' : '' !!}
+                    {!! array_key_exists('address_line_1', $data->customer) && strlen($data->customer['address_line_1']) > 0 ? $data->customer['address_line_1'] . '<br/>' : '' !!}
+                    {!! array_key_exists('address_line_2', $data->customer) && strlen($data->customer['address_line_2']) > 0 ? $data->customer['address_line_2'] . '<br/>' : '' !!}
+                    {!! array_key_exists('address_line_3', $data->customer) && strlen($data->customer['address_line_3']) > 0 ? $data->customer['address_line_3'] . '<br/>' : '' !!}
+                    {!! array_key_exists('address_line_4', $data->customer) && strlen($data->customer['address_line_4']) > 0 ? $data->customer['address_line_4'] . '<br/>' : '' !!}
 
                     <br/>
 
-                    {!! array_key_exists('phone', $data->customer) != NULL ? 'Phone: ' . $data->customer['phone'] . '<br/>' : '' !!}
-                    {!! array_key_exists('email', $data->customer) != NULL ? 'Email: ' . $data->customer['email'] . '<br/>' : '' !!}
+                    {!! array_key_exists('phone', $data->customer) && strlen($data->customer['phone']) > 0 ? 'Phone: ' . $data->customer['phone'] . '<br/>' : '' !!}
+                    {!! array_key_exists('email', $data->customer) && strlen($data->customer['email']) > 0 ? 'Email: ' . $data->customer['email'] . '<br/>' : '' !!}
                     </div>
                 </div>
             </div>
