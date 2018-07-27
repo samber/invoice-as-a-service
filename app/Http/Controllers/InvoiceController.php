@@ -22,6 +22,7 @@ class InvoiceController extends Controller
             'lang' => 'required|string|in:en',
             'date' => 'required|integer|min:0|max:2147483647',
             'due_date' => 'required|integer|min:0|max:2147483647',
+            'paid' => 'nullable|boolean',
 
             // optional
             'decimals' => 'nullable|integer|min:0|max:10',
@@ -66,6 +67,7 @@ class InvoiceController extends Controller
 
         $date = date("d M Y", $data['date']);
         $due_date = date("d M Y", $data['due_date']);
+        $paid = !array_key_exists('paid', $data) || $data['paid'] != true ? false : $data['due_date'];
 
         $sub_total = 0;
         $tax_total = 0;
@@ -90,6 +92,7 @@ class InvoiceController extends Controller
             $data['lang'],
             $date,
             $due_date,
+            $paid,
             $data['notes'],
             $data['items'],
             $data['customer'],

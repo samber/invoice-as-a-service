@@ -23,6 +23,11 @@
                 @endif
                 <br />
             </div>
+            @if($data->paid == true)
+                <div style="position: absolute; top: 0px; right: 0px;">
+                    <img src="{{ public_path('img/paid.png') }}" />
+                </div>
+            @endif
         </div>
         <br />
         <!-- <h2>#{{ $data->id }}</h2> -->

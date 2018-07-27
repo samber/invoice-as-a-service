@@ -26,6 +26,7 @@ $ curl "https://invoice-as-a-service.cleverapps.io/api/invoice/generate" \
         "lang": "en",
         "date": 1520852472,
         "due_date": 1521457272,
+        "paid": false,
         "decimals": 2,
         "notes": "Lorem ipsum dolor sit amet.",
 
@@ -60,7 +61,7 @@ $ curl "https://invoice-as-a-service.cleverapps.io/api/invoice/generate" \
             "logo": "https://upload.wikimedia.org/wikipedia/commons/7/70/Amazon_logo_plain.svg",
             "siret": "539 138 107 00021"
         },
-        
+
         "s3": {
             "presigned_url": null
         }
@@ -90,6 +91,7 @@ $ curl "http://localhost:8000/api/invoice/generate" \
 | **tax** | float | yes | Tax percentage | 20 |
 | **date** | integer | yes | Timestamp of invoice creation date | 1520852472 |
 | **due_date** | integer | yes | Timestamp of invoice due date | 1521457272 |
+| **paid** | boolean | no | Adding a "paid" logo (default: false) | false |
 | **decimals** | integer | no | Number decimals for prices (default: 2) | 2 |
 | **notes** | string | no | Terms, conditions or anything you have to write to print a valid invoice. | "Lorem ipsum dolor sit amet." |
 | **items** | array | yes | List of items | [ Item(...), Item(...) ] |
