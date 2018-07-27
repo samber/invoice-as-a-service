@@ -12,6 +12,8 @@ I provide `invoice-as-a-service` with a full hosted environment for fast and eas
 
 For improved privacy, you can also deploy the project on your own infrastructure for free.
 
+Output file can be exported to AWS S3 and every compatible storage destination.
+
 ### Hosted
 
 ```sh
@@ -57,6 +59,10 @@ $ curl "https://invoice-as-a-service.cleverapps.io/api/invoice/generate" \
             "email": "billing@bienavous.io",
             "logo": "https://upload.wikimedia.org/wikipedia/commons/7/70/Amazon_logo_plain.svg",
             "siret": "539 138 107 00021"
+        },
+        
+        "s3": {
+            "presigned_url": null
         }
 
      }'
@@ -89,6 +95,7 @@ $ curl "http://localhost:8000/api/invoice/generate" \
 | **items** | array | yes | List of items | [ Item(...), Item(...) ] |
 | **customer** | object | yes | Customer infos | Customer(...) |
 | **company** | object | yes | Company infos | Company(...) |
+| **s3** | object | false | AWS S3 invoice upload | S3Upload(...) |
 
 ### Item:
 
@@ -126,6 +133,13 @@ $ curl "http://localhost:8000/api/invoice/generate" \
 | **logo** | string | no | URL of your company logo | "https://acme.corp/logo.png" |
 | **siret** | string | no | French company identification number | "539 138 107 00021" |
 
+### S3 upload
+
+| Property | Type | Required | Description | Example |
+| --- | --- | :---: | --- | --- |
+| **presigned_url** | string | false | Presigned AWS S3 upload url | "https://my-bucket.s3.eu-central-1.amazonaws.com/201807250018--foobar@example.com.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=xxxx&X-Amz-Date=xxxx&X-Amz-Expires=xxxx&X-Amz-Signature=xxxx&X-Amz-SignedHeaders=host" |
+
+
 ## Notes
 
 The provided logo (optional) must be accessible from the `invoice-as-a-service` API !
@@ -137,3 +151,16 @@ Fuck yeah!
 Clone + pull-request.
 
 I usually reply in hours or days ;)
+
+Things happen here:
+- template: `resources/views/invoices/default.blade.php``
+- controller + input validation: `app/Http/Controllers/InvoiceController.php`
+- pdf build: `app/Helpers/PDF.php`
+- invoice storage: `app/Helpers/Storage.php`
+
+[AWS S3] - Generate presigned upload url:
+
+```sh
+$ aws configure
+$ node ./scripts/presign-upload-url.js <region> <my-bucket> invoices/201807250018--foobar@example.com.pdf
+```

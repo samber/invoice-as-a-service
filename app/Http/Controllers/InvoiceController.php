@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 
 use App\Http\Controllers\Controller;
 use App\Helpers\PDF;
+use App\Helpers\Storage;
 
 class InvoiceController extends Controller
 {
@@ -53,6 +54,9 @@ class InvoiceController extends Controller
             'company.email' => 'nullable|email|min:3|max:255',
             'company.logo' => 'nullable|string|max:255',
             'company.siret' => 'nullable|string|min:3|max:255',
+
+            // optional
+            's3.presigned_url' => 'nullable|string|active_url',
         ]);
 
         if ($validator->fails())
@@ -97,6 +101,12 @@ class InvoiceController extends Controller
 
         $doc = $pdf->build('default');
 
-        return response($doc, 201);
+        if (isset($data['s3']) && isset($data['s3']['presigned_url'])) {
+            $storage = new Storage($doc);
+            $res_body = $storage->uploadS3($data['s3']['presigned_url']);
+            return response(['s3' => $res_body], $res_body['uploaded'] == true ? 201 : 500);
+        } else {
+            return response($doc, 201);
+        }
     }
 }
