@@ -27,6 +27,7 @@ $ curl "https://invoice-as-a-service.cleverapps.io/api/invoice/generate" \
         "date": 1520852472,
         "due_date": 1521457272,
         "paid": false,
+        "payment_link": "https://amazon.com/user/invoices/42/pay",
         "decimals": 2,
         "notes": "Lorem ipsum dolor sit amet.",
 
@@ -92,6 +93,7 @@ $ curl "http://localhost:8000/api/invoice/generate" \
 | **date** | integer | yes | Timestamp of invoice creation date | 1520852472 |
 | **due_date** | integer | yes | Timestamp of invoice due date | 1521457272 |
 | **paid** | boolean | no | Adding a "paid" logo (default: false) | false |
+| **payment_link** | string | no | Payment link | "https://amazon.com/user/invoices/42/pay" |
 | **decimals** | integer | no | Number decimals for prices (default: 2) | 2 |
 | **notes** | string | no | Terms, conditions or anything you have to write to print a valid invoice. | "Lorem ipsum dolor sit amet." |
 | **items** | array | yes | List of items | [ Item(...), Item(...) ] |
