@@ -16,6 +16,7 @@ class PDF
     public $date;
     public $due_date;
     public $paid;
+    public $payment_link;
     public $notes;
 
     public $items;
@@ -26,7 +27,7 @@ class PDF
     public $tax_total;
     public $total;
 
-    public function __construct($id, $currency, $lang, $date, $due_date, $paid, $notes, $items, $customer, $company, $sub_total, $tax_total, $total)
+    public function __construct($id, $currency, $lang, $date, $due_date, $paid, $payment_link, $notes, $items, $customer, $company, $sub_total, $tax_total, $total)
     {
         $this->id = $id;
         $this->currency = $currency;
@@ -34,6 +35,7 @@ class PDF
         $this->date = $date;
         $this->due_date = $due_date;
         $this->paid = $paid;
+        $this->payment_link = $payment_link;
         $this->notes = $notes;
         $this->items = $items;
         $this->customer = $customer;
@@ -77,6 +79,7 @@ class PDF
           'date' => $this->date,
           'due_date' => $this->due_date,
           'paid' => $this->paid,
+          'payment_link' => $this->payment_link,
           'notes' => $this->notes,
           'items' => $this->items,
           'customer' => $this->customer,

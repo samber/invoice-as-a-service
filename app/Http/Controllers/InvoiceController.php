@@ -23,6 +23,7 @@ class InvoiceController extends Controller
             'date' => 'required|integer|min:0|max:2147483647',
             'due_date' => 'required|integer|min:0|max:2147483647',
             'paid' => 'nullable|boolean',
+            'payment_link' => 'nullable|string|active_url',
 
             // optional
             'decimals' => 'nullable|integer|min:0|max:10',
@@ -63,11 +64,11 @@ class InvoiceController extends Controller
         if ($validator->fails())
             return response()->json($validator->errors()->toJson(), 422);
 
-        $decimals = $data['decimals'] == NULL ? 2 : $data['decimals'];
-
         $date = date("d M Y", $data['date']);
         $due_date = date("d M Y", $data['due_date']);
         $paid = !array_key_exists('paid', $data) || $data['paid'] != true ? false : $data['due_date'];
+        $payment_link = !array_key_exists('payment_link', $data) || $data['payment_link'] == NULL ? NULL : $data['payment_link'];
+        $decimals = !array_key_exists('decimals', $data) || $data['decimals'] == NULL ? 2 : $data['decimals'];
 
         $sub_total = 0;
         $tax_total = 0;
@@ -93,6 +94,7 @@ class InvoiceController extends Controller
             $date,
             $due_date,
             $paid,
+            $payment_link,
             $data['notes'],
             $data['items'],
             $data['customer'],

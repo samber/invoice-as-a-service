@@ -22,6 +22,10 @@
                     <b>Invoice: </b> #{{ $data->id }}
                 @endif
                 <br />
+                @if ($data->payment_link)
+                    <b>Payment link: </b> <a href="{{ $data->payment_link }}">{{ $data->payment_link }}</a>
+                @endif
+                <br />
             </div>
             @if($data->paid == true)
                 <div style="position: absolute; top: 0px; right: 0px;">
