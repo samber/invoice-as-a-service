@@ -93,7 +93,7 @@ $ curl "http://localhost:8000/api/invoice/generate" \
 | **date** | integer | yes | Timestamp of invoice creation date | 1520852472 |
 | **due_date** | integer | yes | Timestamp of invoice due date | 1521457272 |
 | **paid** | boolean | no | Adding a "paid" logo (default: false) | false |
-| **payment_link** | string | no | Payment link | "https://amazon.com/user/invoices/42/pay" |
+| **payment_link** | string | no | Payment link | "https://<span></span>amazon.com/user/invoices/42/pay" |
 | **decimals** | integer | no | Number decimals for prices (default: 2) | 2 |
 | **notes** | string | no | Terms, conditions or anything you have to write to print a valid invoice. | "Lorem ipsum dolor sit amet." |
 | **items** | array | yes | List of items | [ Item(...), Item(...) ] |
@@ -134,14 +134,14 @@ $ curl "http://localhost:8000/api/invoice/generate" \
 | **address_line_4** | string | no | Customer address, line 4 | "Earth" |
 | **phone** | string | no | Customer phone number | "1-888-548-0034" |
 | **email** | string | no | Customer email address | "billing@bienavous.io" |
-| **logo** | string | no | URL of your company logo | "https://acme.corp/logo.png" |
+| **logo** | string | no | URL of your company logo | "https://<span></span>acme.corp/logo.png" |
 | **siret** | string | no | French company identification number | "539 138 107 00021" |
 
 ### S3 upload
 
 | Property | Type | Required | Description | Example |
 | --- | --- | :---: | --- | --- |
-| **presigned_url** | string | false | Presigned AWS S3 upload url | "https://my-bucket.s3.eu-central-1.amazonaws.com/201807250018--foobar@example.com.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=xxxx&X-Amz-Date=xxxx&X-Amz-Expires=xxxx&X-Amz-Signature=xxxx&X-Amz-SignedHeaders=host" |
+| **presigned_url** | string | false | Presigned AWS S3 upload url | "https://<span></span>my-bucket.s3.eu-central-1.amazonaws.com/201807250018--foobar@example.com.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=xxxx&X-Amz-Date=xxxx&X-Amz-Expires=xxxx&X-Amz-Signature=xxxx&X-Amz-SignedHeaders=host" |
 
 
 ## Notes
