@@ -60,7 +60,14 @@ $ curl "https://invoice-as-a-service.cleverapps.io/api/invoice/generate" \
             "phone": "1-888-548-0034",
             "email": "billing@bienavous.io",
             "logo": "https://upload.wikimedia.org/wikipedia/commons/7/70/Amazon_logo_plain.svg",
-            "siret": "539 138 107 00021"
+            "siret": "539 138 107 00021",
+            "other": [
+                "EMEA office",
+                {
+                    "title": "Business hours",
+                    "content": "9am - 6pm"
+                }
+            ]
         },
 
         "s3": {
@@ -95,7 +102,7 @@ $ curl "http://localhost:8000/api/invoice/generate" \
 | **paid** | boolean | no | Adding a "paid" logo (default: false) | false |
 | **payment_link** | string | no | Payment link | "https://amazon.com/user/invoices/42/pay" |
 | **decimals** | integer | no | Number decimals for prices (default: 2) | 2 |
-| **notes** | string | no | Terms, conditions or anything you have to write to print a valid invoice. | "Lorem ipsum dolor sit amet." |
+| **notes** | string | no | Terms, conditions or anything you have to write in order to edit a valid invoice. | "Lorem ipsum dolor sit amet." |
 | **items** | array | yes | List of items | [ Item(...), Item(...) ] |
 | **customer** | object | yes | Customer infos | Customer(...) |
 | **company** | object | yes | Company infos | Company(...) |
@@ -122,6 +129,7 @@ $ curl "http://localhost:8000/api/invoice/generate" \
 | **address_line_4** | string | no | Customer address, line 4 | "Earth" |
 | **phone** | string | no | Customer phone number | "1-888-548-0034" |
 | **email** | string | no | Customer email address | "john@gmail.com" |
+| **other** | array of mixed string and Other() | no | Customer additional infos | [ String, Other(), ... ] |
 
 ### Company:
 
@@ -136,6 +144,16 @@ $ curl "http://localhost:8000/api/invoice/generate" \
 | **email** | string | no | Customer email address | "billing@bienavous.io" |
 | **logo** | string | no | URL of your company logo | "https://acme.corp/logo.png" |
 | **siret** | string | no | French company identification number | "539 138 107 00021" |
+| **other** | array of mixed string and Other() | no | Company additional infos | [ String, Other(), ... ] |
+
+### customer.other[].* and company.other[].*
+
+`customer.other` and `company.other` fields are arrays of mixed type: simple string or the following object:
+
+| Property | Type | Required | Description | Example |
+| --- | --- | :---: | --- | --- |
+| **title** | string | true | Field name | "Twitter handle" |
+| **content** | string | true | Field value | "@foobar" |
 
 ### S3 upload
 
@@ -156,7 +174,7 @@ Clone + pull-request.
 
 I usually reply in hours or days ;)
 
-Things happen here:
+Magic happens here:
 - template: `resources/views/invoices/default.blade.php``
 - controller + input validation: `app/Http/Controllers/InvoiceController.php`
 - pdf build: `app/Helpers/PDF.php`

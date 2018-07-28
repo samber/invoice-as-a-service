@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
 use App\Helpers\PDF;
 use App\Helpers\Storage;
+use App\Rules\OtherField;
 
 class InvoiceController extends Controller
 {
@@ -45,6 +46,7 @@ class InvoiceController extends Controller
             'customer.address_line_4' => 'nullable|string|min:1|max:255',
             'customer.phone' => 'nullable|string|min:3|max:255',
             'customer.email' => 'nullable|email|min:3|max:255',
+            'customer.other.*' => ['nullable', new OtherField],
 
             // company
             'company.summary' => 'required|string|min:2|max:255',
@@ -56,6 +58,7 @@ class InvoiceController extends Controller
             'company.email' => 'nullable|email|min:3|max:255',
             'company.logo' => 'nullable|string|max:255',
             'company.siret' => 'nullable|string|min:3|max:255',
+            'company.other.*' => ['nullable', new OtherField],
 
             // optional
             's3.presigned_url' => 'nullable|string|active_url',

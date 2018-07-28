@@ -54,6 +54,19 @@
                         {!! array_key_exists('phone', $data->company) && strlen($data->company['phone']) > 0 ? 'Phone: ' . $data->company['phone'] . '<br/>' : '' !!}
                         {!! array_key_exists('email', $data->company) && strlen($data->company['email']) > 0 ? 'Email: ' . $data->company['email'] . '<br/>' : '' !!}
                         {!! array_key_exists('siret', $data->company) && strlen($data->company['siret']) > 0 ? 'SIRET: ' . $data->company['siret'] . '<br/>' : '' !!}
+
+                        @if(array_key_exists("other", $data->company) && count($data->company['other']) > 0)
+                            <br/>
+                            @foreach ($data->company["other"] as $item)
+                                @if (gettype($item) == "string")
+                                    {{ $item }}
+                                    <br/>
+                                @elseif (gettype($item) == "array")
+                                    {{ $item['title'] . ': ' . $item['content'] }}
+                                    <br/>
+                                @endif
+                            @endforeach
+                        @endif
                     </div>
                 </div>
             </div>
@@ -61,24 +74,37 @@
                 <h4>Customer Details:</h4>
                 <div class="panel panel-default">
                     <div class="panel-body">
-                    <b>{{ $data->customer['summary'] }}</b>
+                        <b>{{ $data->customer['summary'] }}</b>
 
-                    <br/><br/>
+                        <br/><br/>
 
-                    {!! array_key_exists('address_line_1', $data->customer) && strlen($data->customer['address_line_1']) > 0 ? $data->customer['address_line_1'] . '<br/>' : '' !!}
-                    {!! array_key_exists('address_line_2', $data->customer) && strlen($data->customer['address_line_2']) > 0 ? $data->customer['address_line_2'] . '<br/>' : '' !!}
-                    {!! array_key_exists('address_line_3', $data->customer) && strlen($data->customer['address_line_3']) > 0 ? $data->customer['address_line_3'] . '<br/>' : '' !!}
-                    {!! array_key_exists('address_line_4', $data->customer) && strlen($data->customer['address_line_4']) > 0 ? $data->customer['address_line_4'] . '<br/>' : '' !!}
+                        {!! array_key_exists('address_line_1', $data->customer) && strlen($data->customer['address_line_1']) > 0 ? $data->customer['address_line_1'] . '<br/>' : '' !!}
+                        {!! array_key_exists('address_line_2', $data->customer) && strlen($data->customer['address_line_2']) > 0 ? $data->customer['address_line_2'] . '<br/>' : '' !!}
+                        {!! array_key_exists('address_line_3', $data->customer) && strlen($data->customer['address_line_3']) > 0 ? $data->customer['address_line_3'] . '<br/>' : '' !!}
+                        {!! array_key_exists('address_line_4', $data->customer) && strlen($data->customer['address_line_4']) > 0 ? $data->customer['address_line_4'] . '<br/>' : '' !!}
 
-                    <br/>
+                        <br/>
 
-                    {!! array_key_exists('phone', $data->customer) && strlen($data->customer['phone']) > 0 ? 'Phone: ' . $data->customer['phone'] . '<br/>' : '' !!}
-                    {!! array_key_exists('email', $data->customer) && strlen($data->customer['email']) > 0 ? 'Email: ' . $data->customer['email'] . '<br/>' : '' !!}
+                        {!! array_key_exists('phone', $data->customer) && strlen($data->customer['phone']) > 0 ? 'Phone: ' . $data->customer['phone'] . '<br/>' : '' !!}
+                        {!! array_key_exists('email', $data->customer) && strlen($data->customer['email']) > 0 ? 'Email: ' . $data->customer['email'] . '<br/>' : '' !!}
+
+                        @if(array_key_exists("other", $data->customer) && count($data->customer['other']) > 0)
+                            <br/>
+                            @foreach ($data->customer["other"] as $item)
+                                @if (gettype($item) == "string")
+                                    {{ $item }}
+                                    <br/>
+                                @elseif (gettype($item) == "array")
+                                    {{ $item['title'] . ': ' . $item['content'] }}
+                                    <br/>
+                                @endif
+                            @endforeach
+                        @endif
                     </div>
                 </div>
             </div>
         </div>
-        <h4>Items:</h4>
+        <h4 style="clear:both; position:relative;">Items:</h4>
         <table class="table table-bordered">
             <thead>
                 <tr>
