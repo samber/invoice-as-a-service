@@ -12,7 +12,7 @@ I provide `invoice-as-a-service` with a full hosted environment for fast and eas
 
 For improved privacy, you can also deploy the project on your own infrastructure for free.
 
-Output file can be exported to AWS S3 and every compatible storage destination.
+Output file can be exported to AWS S3 and any compatible storage destination.
 
 ### Hosted
 
