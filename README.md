@@ -60,7 +60,6 @@ $ curl "https://invoice-as-a-service.cleverapps.io/api/invoice/generate" \
             "phone": "1-888-548-0034",
             "email": "billing@bienavous.io",
             "logo": "https://upload.wikimedia.org/wikipedia/commons/7/70/Amazon_logo_plain.svg",
-            "siret": "539 138 107 00021",
             "other": [
                 "EMEA office",
                 {
@@ -143,7 +142,7 @@ $ curl "http://localhost:8000/api/invoice/generate" \
 | **phone** | string | no | Customer phone number | "1-888-548-0034" |
 | **email** | string | no | Customer email address | "billing@bienavous.io" |
 | **logo** | string | no | URL of your company logo | "https://<span></span>acme.corp/logo.png" |
-| **siret** | string | no | French company identification number | "539 138 107 00021" |
+| **siret** (deprecated) | string | no | French company identification number | "539 138 107 00021" |
 | **other** | array of mixed string and Other() | no | Company additional infos | [ String, Other(), ... ] |
 
 ### customer.other[].* and company.other[].*
