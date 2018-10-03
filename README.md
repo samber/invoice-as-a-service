@@ -71,6 +71,13 @@ $ curl "https://invoice-as-a-service.cleverapps.io/api/invoice/generate" \
 
         "s3": {
             "presigned_url": null
+        },
+
+        "ftp": {
+        	"host": "127.0.0.1",
+        	"username": "ftpuser",
+        	"password": "superSecretPassword",
+        	"path" : "/var/html/share/"
         }
 
      }'
@@ -106,6 +113,7 @@ $ curl "http://localhost:8000/api/invoice/generate" \
 | **customer** | object | yes | Customer infos | Customer(...) |
 | **company** | object | yes | Company infos | Company(...) |
 | **s3** | object | false | AWS S3 invoice upload | S3Upload(...) |
+| **FTP** | object | false | FTP invoice upload | FTPUpload(...) |
 
 ### Item:
 
@@ -159,6 +167,19 @@ $ curl "http://localhost:8000/api/invoice/generate" \
 | Property | Type | Required | Description | Example |
 | --- | --- | :---: | --- | --- |
 | **presigned_url** | string | false | Presigned AWS S3 upload url | "https://<span></span>my-bucket.s3.eu-central-1.amazonaws.com/201807250018--foobar@example.com.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=xxxx&X-Amz-Date=xxxx&X-Amz-Expires=xxxx&X-Amz-Signature=xxxx&X-Amz-SignedHeaders=host" |
+
+
+### FTP upload
+
+| Property | Type | Required | Description | Example |
+| --- | --- | :---: | --- | --- |
+| **host** | string | true | The host, IP Address of the server | "ftp.example.com" |
+| **username** | string | true | The ftp username to connect | "john" |
+| **password** | string | true | The ftp password of the user you are trying to connect | "test1234" |
+| **port** | integer | false | The port used to connect, default is 21. | 21 |
+| **ssl** | boolean | false | If the connection supports SSL mention that here, default is false. | true |
+| **passive** | boolean | false | If it should use a passive connection, default is true. | true |
+| **path** | string | true | The full path on the server where you want the invoice to be uploaded. | "/home/john/share" |
 
 
 ## Notes

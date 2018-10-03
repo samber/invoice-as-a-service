@@ -62,6 +62,14 @@ class InvoiceController extends Controller
 
             // optional
             's3.presigned_url' => 'nullable|string|active_url',
+
+            'ftp.host' => 'nullable|string',
+            'ftp.port' => 'nullable|integer',
+            'ftp.ssl' => 'nullable|boolean',
+            'ftp.passive' => 'nullable|boolean',
+            'ftp.username' => 'nullable|string|required_with:ftp.host',
+            'ftp.password' => 'nullable|string|required_with:ftp.host',
+            'ftp.path' => 'nullable|string|required_with:ftp.host'
         ]);
 
         if ($validator->fails())
@@ -109,12 +117,24 @@ class InvoiceController extends Controller
 
         $doc = $pdf->build('default');
 
+		$response = [];
+        $fileName = "invoice_". $data["id"] ."_" . time() .".pdf";
+
         if (isset($data['s3']) && isset($data['s3']['presigned_url'])) {
             $storage = new Storage($doc);
-            $res_body = $storage->uploadS3($data['s3']['presigned_url']);
-            return response(['s3' => $res_body], $res_body['uploaded'] == true ? 201 : 500);
-        } else {
-            return response($doc, 201);
+			$response['s3'] = $storage->uploadS3($data['s3']['presigned_url']);
         }
+
+		if (isset($data['ftp']) && isset($data['ftp']['host'])) {
+            $storage = new Storage($doc);
+            $response['ftp'] = $storage->uploadFTP($data['ftp'], $fileName);
+        }
+
+
+		if (!count($response)) {
+            return response($doc, 201);
+        } else {
+			return response($response, 201);
+		}
     }
 }
