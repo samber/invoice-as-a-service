@@ -62,12 +62,6 @@ class Storage
      * @return array                 Upload's result
      */
     public function uploadFTP($FTPcredentials, $invoiceId) {
-        // TODO: check if path has trailing slash and add it automatically if its not there
-        // TODO: include ssl parameter and default it to false
-        // TODO: include passive parameter and default it to true
-        // TODO: make tests in case path does not exist (the ROOT param for the adapter)
-
-
         if (ends_with($FTPcredentials["path"], "/") == false) {
             $FTPcredentials["path"] = $FTPcredentials["path"] . "/";
         }
