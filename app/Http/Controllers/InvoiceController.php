@@ -62,6 +62,14 @@ class InvoiceController extends Controller
 
             // optional
             's3.presigned_url' => 'nullable|string|active_url',
+
+            'ftp.host' => 'nullable|string',
+            'ftp.port' => 'nullable|integer',
+            'ftp.ssl' => 'nullable|boolean',
+            'ftp.passive' => 'nullable|boolean',
+            'ftp.username' => 'nullable|string|required_with:ftp.host',
+            'ftp.password' => 'nullable|string|required_with:ftp.host',
+            'ftp.path' => 'nullable|string|required_with:ftp.host'
         ]);
 
         if ($validator->fails())
@@ -108,6 +116,12 @@ class InvoiceController extends Controller
         );
 
         $doc = $pdf->build('default');
+
+        if (isset($data['ftp']) && isset($data['ftp']['host'])) {
+            $storage = new Storage($doc);
+            $res_body = $storage->uploadFTP($data['ftp'], $data['id']);
+            return response(['ftp' => $res_body], $res_body['uploaded'] == true ? 201 : 500);
+        }
 
         if (isset($data['s3']) && isset($data['s3']['presigned_url'])) {
             $storage = new Storage($doc);
