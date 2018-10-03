@@ -61,7 +61,7 @@ class Storage
      * @param  array $FTPcredentials The credentials for the FTP server
      * @return array                 Upload's result
      */
-    public function uploadFTP($FTPcredentials, $invoiceId) {
+    public function uploadFTP($FTPcredentials, $fileName) {
         if (ends_with($FTPcredentials["path"], "/") == false) {
             $FTPcredentials["path"] = $FTPcredentials["path"] . "/";
         }
@@ -89,9 +89,8 @@ class Storage
 
         $filesystem = new Filesystem($adapter);
 
-        $filePath = "invoice_". $invoiceId ."_" . time() .".pdf";
+        $response = $filesystem->write($fileName , $this->doc, ['visibility' => 'public']);
 
-        $response = $filesystem->write($filePath , $this->doc, ['visibility' => 'public']);
         if (!$response) {
             return [
                 'uploaded' => false,
@@ -103,9 +102,8 @@ class Storage
         return [
             'uploaded' => true,
             'message' => null,
-            'path' => $FTPcredentials["path"] . $filePath
+            'path' => $FTPcredentials["path"] . $fileName
         ];
-
 
     }
 

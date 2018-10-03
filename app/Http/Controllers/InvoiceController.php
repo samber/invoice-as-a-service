@@ -117,18 +117,24 @@ class InvoiceController extends Controller
 
         $doc = $pdf->build('default');
 
+		$response = [];
+        $fileName = "invoice_". $data["id"] ."_" . time() .".pdf";
+
         if (isset($data['s3']) && isset($data['s3']['presigned_url'])) {
             $storage = new Storage($doc);
-            $res_body = $storage->uploadS3($data['s3']['presigned_url']);
-            return response(['s3' => $res_body], $res_body['uploaded'] == true ? 201 : 500);
+			$response['s3'] = $storage->uploadS3($data['s3']['presigned_url']);
         }
-        else if (isset($data['ftp']) && isset($data['ftp']['host'])) {
+
+		if (isset($data['ftp']) && isset($data['ftp']['host'])) {
             $storage = new Storage($doc);
-            $res_body = $storage->uploadFTP($data['ftp'], $data['id']);
-            return response(['ftp' => $res_body], $res_body['uploaded'] == true ? 201 : 500);
+            $response['ftp'] = $storage->uploadFTP($data['ftp'], $fileName);
         }
-        else {
+
+
+		if (!count($response)) {
             return response($doc, 201);
-        }
+        } else {
+			return response($response, 201);
+		}
     }
 }
