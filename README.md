@@ -86,6 +86,7 @@ $ curl "https://invoice-as-a-service.cleverapps.io/api/invoice/generate" \
 ### Self hosted
 
 ```sh
+$ composer install
 $ php artisan serve
 ```
 
@@ -188,7 +189,7 @@ The provided logo (optional) must be accessible from the `invoice-as-a-service` 
 
 ## Contribute
 
-Fuck yeah!
+Hell yeah!
 
 Clone + pull-request.
 

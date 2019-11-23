@@ -73,7 +73,7 @@ class InvoiceController extends Controller
         ]);
 
         if ($validator->fails())
-            return response()->json($validator->errors()->toJson(), 422);
+            return response()->json($validator->errors(), 422);
 
         $date = date("d M Y", $data['date']);
         $due_date = date("d M Y", $data['due_date']);
