@@ -30,6 +30,7 @@ class Kernel extends HttpKernel
         'api' => [
             'throttle:600,1',
             'bindings',
+            \Barryvdh\Cors\HandleCors::class,
         ],
     ];
 
@@ -43,6 +44,5 @@ class Kernel extends HttpKernel
     protected $routeMiddleware = [
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-        'cors' => \Barryvdh\Cors\HandleCors::class,
     ];
 }
