@@ -132,7 +132,7 @@ class InvoiceController extends Controller
 
 
 		if (!count($response)) {
-            return response($doc, 201);
+            return response($doc, 201)->header('Content-Type', 'application/pdf');
         } else {
 			return response($response, 201);
 		}
