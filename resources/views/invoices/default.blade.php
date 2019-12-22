@@ -9,6 +9,8 @@
         </style>
     </head>
     <body>
+        <h1 style="margin-bottom: 0px; font-size: 25px;">Invoice</h1>
+        <hr style="margin: 10px 0px;">
         <div style="clear:both; position:relative;">
             <div style="position:absolute; left:0pt; width:250pt;">
                 @if (array_key_exists('logo', $data->company) && strlen($data->company['logo']) > 0)
