@@ -138,6 +138,7 @@ $ curl "http://localhost:8000/api/invoice/generate" \
 | **address_line_4** | string | no | Customer address, line 4 | "Earth" |
 | **phone** | string | no | Customer phone number | "1-888-548-0034" |
 | **email** | string | no | Customer email address | "john@gmail.com" |
+| **siret** (deprecated) | string | no | French company identification number | "539 138 107 00021" |
 | **other** | array of mixed string and Other() | no | Customer additional infos | [ String, Other(), ... ] |
 
 ### Company:

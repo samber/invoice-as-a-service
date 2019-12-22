@@ -36,10 +36,10 @@
         <br />
         <!-- <h2>#{{ $data->id }}</h2> -->
         <div style="clear:both; position:relative;">
-            <div style="position:absolute; left:0pt; width:250pt;">
+            <div style="width: 250pt; float: left;">
                 <h4>Business Details:</h4>
                 <div class="panel panel-default">
-                    <div class="panel-body">
+                    <div style="padding: 15px;">
                         <b>{{ $data->company['summary'] }}</b>
 
                         <br/><br/>
@@ -70,10 +70,10 @@
                     </div>
                 </div>
             </div>
-            <div style="margin-left: 300pt;">
+            <div style="width: 250pt; float: right;">
                 <h4>Customer Details:</h4>
                 <div class="panel panel-default">
-                    <div class="panel-body">
+                    <div style="padding: 15px;">
                         <b>{{ $data->customer['summary'] }}</b>
 
                         <br/><br/>
@@ -87,6 +87,7 @@
 
                         {!! array_key_exists('phone', $data->customer) && strlen($data->customer['phone']) > 0 ? 'Phone: ' . $data->customer['phone'] . '<br/>' : '' !!}
                         {!! array_key_exists('email', $data->customer) && strlen($data->customer['email']) > 0 ? 'Email: ' . $data->customer['email'] . '<br/>' : '' !!}
+                        {!! array_key_exists('siret', $data->customer) && strlen($data->customer['siret']) > 0 ? 'SIRET: ' . $data->customer['siret'] . '<br/>' : '' !!}
 
                         @if(array_key_exists("other", $data->customer) && count($data->customer['other']) > 0)
                             <br/>
@@ -104,7 +105,8 @@
                 </div>
             </div>
         </div>
-        <h4 style="clear:both; position:relative;">Items:</h4>
+
+        <h4 style="clear: both; position: relative;">Items:</h4>
         <table class="table table-bordered">
             <thead>
                 <tr>

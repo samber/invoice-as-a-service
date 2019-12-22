@@ -46,6 +46,7 @@ class InvoiceController extends Controller
             'customer.address_line_4' => 'nullable|string|min:1|max:255',
             'customer.phone' => 'nullable|string|min:3|max:255',
             'customer.email' => 'nullable|email|min:3|max:255',
+            'customer.siret' => 'nullable|string|min:3|max:255',
             'customer.other.*' => ['nullable', new OtherField],
 
             // company
