@@ -188,7 +188,7 @@ $ curl "http://localhost:8000/api/invoice/generate" \
 
 ## Notes
 
-The provided logo (optional) must be accessible from the `invoice-as-a-service` API !
+The provided logo_url (optional) must be accessible from the `invoice-as-a-service` API !
 
 ## Contribute
 
