@@ -10,6 +10,8 @@ use App\Http\Controllers\Controller;
 use App\Helpers\PDF;
 use App\Helpers\Storage;
 use App\Rules\OtherField;
+use App\Rules\Base64Image;
+use Alphametric\Validation\Rules\EncodedImage;
 
 class InvoiceController extends Controller
 {
@@ -46,7 +48,7 @@ class InvoiceController extends Controller
             'customer.address_line_4' => 'nullable|string|min:1|max:255',
             'customer.phone' => 'nullable|string|min:3|max:255',
             'customer.email' => 'nullable|email|min:3|max:255',
-            'customer.siret' => 'nullable|string|min:3|max:255',
+            'customer.siret' => 'nullable|string|min:3|max:255',    // @Deprecated
             'customer.other.*' => ['nullable', new OtherField],
 
             // company
@@ -57,8 +59,10 @@ class InvoiceController extends Controller
             'company.address_line_4' => 'nullable|string|min:1|max:255',
             'company.phone' => 'nullable|string|min:3|max:255',
             'company.email' => 'nullable|email|min:3|max:255',
-            'company.logo' => 'nullable|string|max:255',
-            'company.siret' => 'nullable|string|min:3|max:255',
+            'company.logo' => 'nullable|string|max:255',    // @Deprecated
+            'company.logo_url' => 'nullable|string|max:255',
+            'company.logo_b64' => ['nullable', new Base64Image(['png', 'jpg', 'jpeg', 'gif', 'bmp'])],
+            'company.siret' => 'nullable|string|min:3|max:255',    // @Deprecated
             'company.other.*' => ['nullable', new OtherField],
 
             // optional

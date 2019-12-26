@@ -60,7 +60,7 @@ $ curl "https://invoice-as-a-service.cleverapps.io/api/invoice/generate" \
             "address_line_4": "Earth",
             "phone": "1-888-548-0034",
             "email": "billing@bienavous.io",
-            "logo": "https://upload.wikimedia.org/wikipedia/commons/7/70/Amazon_logo_plain.svg",
+            "logo_url": "https://upload.wikimedia.org/wikipedia/commons/7/70/Amazon_logo_plain.svg",
             "other": [
                 "EMEA office",
                 {
@@ -152,7 +152,8 @@ $ curl "http://localhost:8000/api/invoice/generate" \
 | **address_line_4** | string | no | Customer address, line 4 | "Earth" |
 | **phone** | string | no | Customer phone number | "1-888-548-0034" |
 | **email** | string | no | Customer email address | "billing@bienavous.io" |
-| **logo** | string | no | URL of your company logo | "https://<span></span>acme.corp/logo.png" |
+| **logo_url** | string | no | URL of your company logo | "https://<span></span>acme.corp/logo.png" |
+| **logo_b64** | string | no | Base64 encoded image of your company logo | "data:image/png;base64,........." |
 | **siret** (deprecated) | string | no | French company identification number | "539 138 107 00021" |
 | **other** | array of mixed string and Other() | no | Company additional infos | [ String, Other(), ... ] |
 

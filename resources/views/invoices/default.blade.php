@@ -12,9 +12,14 @@
         <h1 style="margin-bottom: 0px; font-size: 25px;">Invoice</h1>
         <hr style="margin: 10px 0px;">
         <div style="clear:both; position:relative;">
-            <div style="position:absolute; left:0pt; width:250pt;">
+            <div style="position:absolute; top: 20px; left:0pt; width:250pt;">
                 @if (array_key_exists('logo', $data->company) && strlen($data->company['logo']) > 0)
-                    <img class="img-rounded" style="max-width:250pt;max-height:100pt" src="{{ $data->company['logo'] }}">
+                    <!-- DEPRECATED -->
+                    <img style="max-width:250pt;max-height:100pt" src="{{ $data->company['logo'] }}">
+                @elseif (array_key_exists('logo_url', $data->company) && strlen($data->company['logo_url']) > 0)
+                    <img style="max-width:250pt;max-height:100pt" src="{{ $data->company['logo_url'] }}">
+                @elseif (array_key_exists('logo_b64', $data->company) && strlen($data->company['logo_b64']) > 0)
+                    <img style="max-width:250pt;max-height:100pt" src="{{ $data->company['logo_b64'] }}">
                 @endif
             </div>
             <div style="margin-left:300pt;">
@@ -55,6 +60,7 @@
 
                         {!! array_key_exists('phone', $data->company) && strlen($data->company['phone']) > 0 ? 'Phone: ' . $data->company['phone'] . '<br/>' : '' !!}
                         {!! array_key_exists('email', $data->company) && strlen($data->company['email']) > 0 ? 'Email: ' . $data->company['email'] . '<br/>' : '' !!}
+                        <!-- DEPRECATED -->
                         {!! array_key_exists('siret', $data->company) && strlen($data->company['siret']) > 0 ? 'SIRET: ' . $data->company['siret'] . '<br/>' : '' !!}
 
                         @if(array_key_exists("other", $data->company) && count($data->company['other']) > 0)
@@ -89,6 +95,7 @@
 
                         {!! array_key_exists('phone', $data->customer) && strlen($data->customer['phone']) > 0 ? 'Phone: ' . $data->customer['phone'] . '<br/>' : '' !!}
                         {!! array_key_exists('email', $data->customer) && strlen($data->customer['email']) > 0 ? 'Email: ' . $data->customer['email'] . '<br/>' : '' !!}
+                        <!-- DEPRECATED -->
                         {!! array_key_exists('siret', $data->customer) && strlen($data->customer['siret']) > 0 ? 'SIRET: ' . $data->customer['siret'] . '<br/>' : '' !!}
 
                         @if(array_key_exists("other", $data->customer) && count($data->customer['other']) > 0)
