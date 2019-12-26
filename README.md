@@ -107,7 +107,7 @@ $ curl "http://localhost:8000/api/invoice/generate" \
 | **tax** | float | yes | Tax percentage | 20 |
 | **date** | integer | yes | Timestamp of invoice creation date | 1520852472 |
 | **due_date** | integer | yes | Timestamp of invoice due date | 1521457272 |
-| **paid** | boolean | no | Adding a "paid" logo (default: false) | false |
+| **paid** | boolean | no | Adding a "paid" image (default: false) | false |
 | **payment_link** | string | no | Payment link | "https://<span></span>amazon.com/user/invoices/42/pay" |
 | **decimals** | integer | no | Number decimals for prices (default: 2) | 2 |
 | **notes** | string | no | Terms, conditions or anything you have to write in order to edit a valid invoice. | "Lorem ipsum dolor sit amet." |
