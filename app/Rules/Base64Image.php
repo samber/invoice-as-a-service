@@ -35,7 +35,7 @@ class Base64Image implements Rule
 
         $result = validator(
             ['file' => $this->createTemporaryFile($value)], 
-            ['file' => 'image'],
+            ['file' => 'image']
         )->passes();
         fclose($this->file);
         return $result;
