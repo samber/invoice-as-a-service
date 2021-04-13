@@ -15,7 +15,7 @@ Rendered file can be returned into the HTTP response or exported to:
 ## Demo
 
 <kbd>
-    ![Screenshot](/example.png)
+    <img alt="Screenshot" src="/example.png">
 </kbd>
 
 ## Usage
