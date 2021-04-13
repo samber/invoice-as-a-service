@@ -214,3 +214,10 @@ Magic happens here:
 $ aws configure
 $ node ./scripts/presign-upload-url.js <region> <my-bucket> invoices/201807250018--foobar@example.com.pdf
 ```
+
+## Update dependencies
+
+```bash
+$ composer outdated -D
+$ composer update <package-name> --with-dependencies
+```

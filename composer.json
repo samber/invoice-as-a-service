@@ -11,14 +11,14 @@
         "fideloper/proxy": "~4.0",
         "guzzlehttp/guzzle": "=6.3",
         "laravel/framework": "6.20.*",
+        "laravel/helpers": "^1.4",
         "laravel/tinker": "~1.0"
     },
     "require-dev": {
         "filp/whoops": "~2.0",
         "fzaninotto/faker": "~1.4",
         "mockery/mockery": "~1.0",
-        "nunomaduro/collision": "~2.0",
-        "phpunit/phpunit": "~7.0",
+        "phpunit/phpunit": ">=7.0",
         "symfony/thanks": "^1.0"
     },
     "autoload": {
