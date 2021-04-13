@@ -1,9 +1,18 @@
 
 # Invoice as a service
 
-This service generates professional looking PDF invoices, from a simple POST HTTP request with json payload.
+This service *generates professional looking PDF invoices*, from a simple POST HTTP request with json payload.
 
-## Example
+## File destinations / storage
+
+Rendered file can be returned into the HTTP response or exported to:
+
+- AWS S3 (and any compatible storage destination)
+- FTP server
+- Webhook
+- Zapier
+
+## Demo
 
 ![Screenshot](/example.png)
 
@@ -12,13 +21,6 @@ This service generates professional looking PDF invoices, from a simple POST HTT
 I provide `invoice-as-a-service` with a full hosted environment for fast and easy setup (endpoint: https://invoice-as-a-service.cleverapps.io).
 
 For improved privacy, you can also deploy the project on your own infrastructure for free.
-
-Output file can be exported to:
-
-- AWS S3 (and any compatible storage destination)
-- FTP server
-- Webhook
-- Zapier
 
 ### Hosted
 
