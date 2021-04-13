@@ -12,14 +12,14 @@
         <h1 style="margin-bottom: 0px; font-size: 25px;">Invoice</h1>
         <hr style="margin: 10px 0px;">
         <div style="clear:both; position:relative;">
-            <div style="position:absolute; top: 20px; left:0pt; width:250pt;">
+            <div style="position:absolute; top: 20px; left:0pt; width:200pt;">
                 @if (array_key_exists('logo', $data->company) && strlen($data->company['logo']) > 0)
                     <!-- DEPRECATED -->
-                    <img style="max-width:250pt;max-height:100pt" src="{{ $data->company['logo'] }}">
+                    <img style="max-width:200pt;max-height:100pt" src="{{ $data->company['logo'] }}">
                 @elseif (array_key_exists('logo_url', $data->company) && strlen($data->company['logo_url']) > 0)
-                    <img style="max-width:250pt;max-height:100pt" src="{{ $data->company['logo_url'] }}">
+                    <img style="max-width:200pt;max-height:100pt" src="{{ $data->company['logo_url'] }}">
                 @elseif (array_key_exists('logo_b64', $data->company) && strlen($data->company['logo_b64']) > 0)
-                    <img style="max-width:250pt;max-height:100pt" src="{{ $data->company['logo_b64'] }}">
+                    <img style="max-width:200pt;max-height:100pt" src="{{ $data->company['logo_b64'] }}">
                 @endif
             </div>
             <div style="margin-left:300pt;">

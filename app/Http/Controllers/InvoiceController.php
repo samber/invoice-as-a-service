@@ -65,16 +65,25 @@ class InvoiceController extends Controller
             'company.siret' => 'nullable|string|min:3|max:255',    // @Deprecated
             'company.other.*' => ['nullable', new OtherField],
 
-            // optional
+            // upload pdf into aws-s3 - optional
             's3.presigned_url' => 'nullable|string|active_url',
 
+            // upload pdf into ftp - optional
             'ftp.host' => 'nullable|string',
             'ftp.port' => 'nullable|integer',
             'ftp.ssl' => 'nullable|boolean',
             'ftp.passive' => 'nullable|boolean',
             'ftp.username' => 'nullable|string|required_with:ftp.host',
             'ftp.password' => 'nullable|string|required_with:ftp.host',
-            'ftp.path' => 'nullable|string|required_with:ftp.host'
+            'ftp.path' => 'nullable|string|required_with:ftp.host',
+
+            // upload pdf into webhook - optional
+            'webhook.url' => 'nullable|string|active_url',
+            'webhook.headers' => 'nullable',
+
+            // upload pdf into zapier hook - optional
+            'zapier.zap_url' => 'nullable|string|url|starts_with:https://hooks.zapier.com/hooks/catch/',
+            'zapier.filename' => 'nullable|string',
         ]);
 
         if ($validator->fails())
@@ -135,6 +144,15 @@ class InvoiceController extends Controller
             $response['ftp'] = $storage->uploadFTP($data['ftp'], $fileName);
         }
 
+		if (isset($data['webhook']) && isset($data['webhook']['url'])) {
+            $storage = new Storage($doc);
+            $response['webhook'] = $storage->uploadWebhook($data['webhook'], $fileName, $data);
+        }
+
+		if (isset($data['zapier']) && isset($data['zapier']['zap_url'])) {
+            $storage = new Storage($doc);
+            $response['zapier'] = $storage->uploadZapier($data['zapier'], $fileName, $data);
+        }
 
 		if (!count($response)) {
             return response($doc, 201)->header('Content-Type', 'application/pdf');

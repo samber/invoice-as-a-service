@@ -13,7 +13,12 @@ I provide `invoice-as-a-service` with a full hosted environment for fast and eas
 
 For improved privacy, you can also deploy the project on your own infrastructure for free.
 
-Output file can be exported to AWS S3 and any compatible storage destination.
+Output file can be exported to:
+
+- AWS S3 (and any compatible storage destination)
+- FTP server
+- Webhook
+- Zapier
 
 ### Hosted
 
@@ -28,13 +33,13 @@ $ curl "https://invoice-as-a-service.cleverapps.io/api/invoice/generate" \
         "date": 1520852472,
         "due_date": 1521457272,
         "paid": false,
-        "payment_link": "https://amazon.com/user/invoices/42/pay",
+        "payment_link": "https://screeb.app/user/invoices/42/pay",
         "decimals": 2,
         "notes": "Lorem ipsum dolor sit amet.",
 
         "items": [
             {
-                "title": "'Growth' plan Bienavous.io",
+                "title": "'Growth' plan Screeb.app",
                 "description": "1 year subscription",
                 "price": 42,
                 "quantity": 1,
@@ -53,14 +58,14 @@ $ curl "https://invoice-as-a-service.cleverapps.io/api/invoice/generate" \
         },
 
         "company": {
-            "summary": "Bienavous",
+            "summary": "Screeb",
             "address_line_1": "123, place de Bretagne",
             "address_line_2": "44000 Nantes",
             "address_line_3": "France",
             "address_line_4": "Earth",
             "phone": "1-888-548-0034",
-            "email": "billing@bienavous.io",
-            "logo_url": "https://upload.wikimedia.org/wikipedia/commons/7/70/Amazon_logo_plain.svg",
+            "email": "billing@screeb.app",
+            "logo_url": "https://raw.githubusercontent.com/samber/invoice-as-a-service/master/screeb-logo.png",
             "other": [
                 "EMEA office",
                 {
@@ -79,6 +84,18 @@ $ curl "https://invoice-as-a-service.cleverapps.io/api/invoice/generate" \
         	"username": "ftpuser",
         	"password": "superSecretPassword",
         	"path" : "/var/html/share/"
+        },
+
+        "webhook": {
+            "url": "https://webhook.example.com/invoice/store",
+            "headers": {
+                "x-token": "very-secret-token"
+            }
+        },
+
+        "zapier": {
+            "zap_url": "https://hooks.zapier.com/hooks/catch/xxxxxxx/yyyyyy",
+            "filename": "invoice-42.pdf"
         }
 
      }'
@@ -112,20 +129,22 @@ Here => [crocomo2744.github.io/Invoicing-form](https://crocomo2744.github.io/Inv
 | **date** | integer | yes | Timestamp of invoice creation date | 1520852472 |
 | **due_date** | integer | yes | Timestamp of invoice due date | 1521457272 |
 | **paid** | boolean | no | Adding a "paid" image (default: false) | false |
-| **payment_link** | string | no | Payment link | "https://<span></span>amazon.com/user/invoices/42/pay" |
+| **payment_link** | string | no | Payment link | "https://<span></span>screeb.app/user/invoices/42/pay" |
 | **decimals** | integer | no | Number decimals for prices (default: 2) | 2 |
 | **notes** | string | no | Terms, conditions or anything you have to write in order to edit a valid invoice. | "Lorem ipsum dolor sit amet." |
 | **items** | array | yes | List of items | [ Item(...), Item(...) ] |
 | **customer** | object | yes | Customer infos | Customer(...) |
 | **company** | object | yes | Company infos | Company(...) |
 | **s3** | object | false | AWS S3 invoice upload | S3Upload(...) |
-| **FTP** | object | false | FTP invoice upload | FTPUpload(...) |
+| **ftp** | object | false | FTP invoice upload | FTPUpload(...) |
+| **webhook** | object | false | Webhook invoice upload | WebhookUpload(...) |
+| **zapier** | object | false | Zapier invoice upload | ZapierUpload(...) |
 
 ### Item:
 
 | Property | Type | Required | Description | Example |
 | --- | --- | :---: | --- | --- |
-| **title** | string | yes | Product or service name | "'Growth' plan Bienavous.io" |
+| **title** | string | yes | Product or service name | "'Growth' plan Screeb.app" |
 | **description** | string | no | Product or service description | "1 year subscription" |
 | **price** | float | yes | Product or service price | 42 |
 | **quantity** | float | no | Product or service quantity (default: 1) | 1 |
@@ -149,13 +168,13 @@ Here => [crocomo2744.github.io/Invoicing-form](https://crocomo2744.github.io/Inv
 
 | Property | Type | Required | Description | Example |
 | --- | --- | :---: | --- | --- |
-| **summary** | string | yes | Your organisation name | "Bienavous" |
+| **summary** | string | yes | Your organisation name | "Screeb" |
 | **address_line_1** | string | yes | Customer address, line 1 | "123, place de Bretagne" |
 | **address_line_2** | string | no | Customer address, line 2 | "44000 Nantes" |
 | **address_line_3** | string | no | Customer address, line 3 | "France" |
 | **address_line_4** | string | no | Customer address, line 4 | "Earth" |
 | **phone** | string | no | Customer phone number | "1-888-548-0034" |
-| **email** | string | no | Customer email address | "billing@bienavous.io" |
+| **email** | string | no | Customer email address | "billing@screeb.app" |
 | **logo_url** | string | no | URL of your company logo | "https://<span></span>acme.corp/logo.png" |
 | **logo_b64** | string | no | Base64 encoded image of your company logo | "data:image/png;base64,........." |
 | **siret** (deprecated) | string | no | French company identification number | "539 138 107 00021" |
@@ -176,7 +195,6 @@ Here => [crocomo2744.github.io/Invoicing-form](https://crocomo2744.github.io/Inv
 | --- | --- | :---: | --- | --- |
 | **presigned_url** | string | false | Presigned AWS S3 upload url | "https://<span></span>my-bucket.s3.eu-central-1.amazonaws.com/201807250018--foobar@example.com.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=xxxx&X-Amz-Date=xxxx&X-Amz-Expires=xxxx&X-Amz-Signature=xxxx&X-Amz-SignedHeaders=host" |
 
-
 ### FTP upload
 
 | Property | Type | Required | Description | Example |
@@ -189,6 +207,19 @@ Here => [crocomo2744.github.io/Invoicing-form](https://crocomo2744.github.io/Inv
 | **passive** | boolean | false | If it should use a passive connection, default is true. | true |
 | **path** | string | true | The full path on the server where you want the invoice to be uploaded. | "/home/john/share" |
 
+### Webhook upload
+
+| Property | Type | Required | Description | Example |
+| --- | --- | :---: | --- | --- |
+| **url** | string | true | The URL of the destination webhook | "https://webhook.example.com/invoice/store" |
+| **headers** | object | false | These headers will be inserted into webhook request | { "x-token": "very-secret-token" } |
+
+### Zapier upload
+
+| Property | Type | Required | Description | Example |
+| --- | --- | :---: | --- | --- |
+| **zap_url** | string | true | URL of Zapier Hook | "https://hooks.zapier.com/hooks/catch/xxxxxxx/yyyyyy" |
+| **filename** | string | false | Filename that will be provided into Zapier Hook | "invoice-42.pdf" |
 
 ## Notes
 

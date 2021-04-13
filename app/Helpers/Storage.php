@@ -25,13 +25,13 @@ class Storage
         try {
             $client = new GuzzleHttp\Client();
             $res = $client->request('PUT', $presigned_url, [
-              'multipart' => [
-                  [
-                    'name' => 'file',
-                    'contents' => $this->doc,
-                  ],
-              ],
-              'timeout' => config('services.s3.timeout'),
+                'multipart' => [
+                    [
+                        'name' => 'file',
+                        'contents' => $this->doc,
+                    ],
+                ],
+                'timeout' => config('services.s3.timeout'),
             ]);
         } catch (GuzzleHttp\Exception\RequestException $err) {
             $reason = NULL;
@@ -104,7 +104,115 @@ class Storage
             'message' => null,
             'path' => $FTPcredentials["path"] . $fileName
         ];
+    }
 
+    public function uploadWebhook($webhookSettings, $fileName, $request) {
+        $url = $webhookSettings['url'];
+        $headers = $webhookSettings['headers'];
+        $strRequest = json_encode($request);
+
+        Log::info("Uploading invoice to webhook => " . $url);
+
+        try {
+            $client = new GuzzleHttp\Client();
+            $res = $client->request('POST', $url, [
+                'multipart' => [
+                    [
+                        'name' => 'file',
+                        'contents' => $this->doc,
+                        'filename' => $fileName,
+                    ],
+                    [
+                        'name' => 'request',
+                        'contents' => $strRequest,
+                    ],
+                ],
+                'headers' => $headers,
+                'timeout' => 30,
+            ]);
+        } catch (GuzzleHttp\Exception\RequestException $err) {
+            $reason = NULL;
+            $message = NULL;
+            if ($err->hasResponse()) {
+                $message = \GuzzleHttp\Psr7\str($err->getResponse());
+                Log::error($message);
+                $message = explode("\r\n", $message);
+                $reason = $err->getResponse()->getReasonPhrase();
+            }
+            return [
+                'uploaded' => false,
+                'reason' => $reason,
+                'message' => $message,
+            ];
+        }
+
+        return [
+            'uploaded' => true,
+            'path' => $url,
+            'method' => 'POST',
+        ];
+    }
+
+    public function uploadZapier($zapierSettings, $fileName, $request) {
+        $url = $zapierSettings['zap_url'];
+        $strRequest = json_encode($request);
+        if (isset($zapierSettings['filename']))
+            $fileName = $zapierSettings['filename'];
+
+        Log::info("Uploading invoice to Zapier => " . $url);
+
+        try {
+            $client = new GuzzleHttp\Client();
+            $res = $client->request('POST', $url, [
+                'multipart' => [
+                    [
+                        'name' => 'file',
+                        'contents' => $this->doc,
+                        'filename' => $fileName,
+                    ],
+                    [
+                        'name' => 'filename',
+                        'contents' => $fileName,
+                    ],
+                    [
+                        'name' => 'extension',
+                        'contents' => 'pdf',
+                    ],
+                    [
+                        'name' => 'request',
+                        'contents' => $strRequest,
+                    ],
+                ],
+              ' json' => [
+                  [
+                    'request' => $request,
+                    'file' => $this->doc,
+                    'filename' => $fileName,
+                  ],
+              ],
+              'timeout' => 30,
+            ]);
+        } catch (GuzzleHttp\Exception\RequestException $err) {
+            $reason = NULL;
+            $message = NULL;
+            if ($err->hasResponse()) {
+                $message = \GuzzleHttp\Psr7\str($err->getResponse());
+                Log::error($message);
+                $message = explode("\r\n", $message);
+                $reason = $err->getResponse()->getReasonPhrase();
+            }
+            return [
+                'uploaded' => false,
+                'reason' => $reason,
+                'message' => $message,
+            ];
+        }
+
+        return [
+            'uploaded' => true,
+            'path' => $url,
+            'method' => 'POST',
+        ];
     }
 
 }
