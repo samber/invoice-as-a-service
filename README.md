@@ -10,7 +10,7 @@ Rendered file can be returned into the HTTP response or exported to:
 - AWS S3 (and any compatible storage destination)
 - FTP server
 - Webhook
-- **Zapier** ("Catch hook" zap)
+- **Zapier**: "Catch hook" trigger, can be linked to Drive, Dropbox...
 
 ## Demo
 
