@@ -1,7 +1,7 @@
 
 # Invoice as a service
 
-This service *generates professional looking PDF invoices*, from a simple POST HTTP request with json payload.
+This service **generates professional looking PDF invoices**, from a simple POST HTTP request with json payload.
 
 ## File destinations / storage
 
@@ -10,7 +10,7 @@ Rendered file can be returned into the HTTP response or exported to:
 - AWS S3 (and any compatible storage destination)
 - FTP server
 - Webhook
-- *Zapier* ("Catch hook" zap)
+- **Zapier** ("Catch hook" zap)
 
 ## Demo
 
