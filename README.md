@@ -243,7 +243,7 @@ Magic happens here:
 - pdf build: `app/Helpers/PDF.php`
 - invoice storage: `app/Helpers/Storage.php`
 
-[AWS S3] - Generate presigned upload url:
+### AWS S3 - Generate presigned upload url:
 
 ```sh
 $ aws configure
