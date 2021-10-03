@@ -238,7 +238,7 @@ Clone + pull-request.
 I usually reply in hours or days ;)
 
 Magic happens here:
-- template: `resources/views/invoices/default.blade.php``
+- template: `resources/views/invoices/default.blade.php`
 - controller + input validation: `app/Http/Controllers/InvoiceController.php`
 - pdf build: `app/Helpers/PDF.php`
 - invoice storage: `app/Helpers/Storage.php`
