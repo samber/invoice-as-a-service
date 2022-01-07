@@ -1,16 +1,34 @@
 FROM php:7.4-fpm
-RUN apt-get update && apt-get install -y libmcrypt-dev \
-    mysql-client libmagickwand-dev --no-install-recommends \
-    && pecl install imagick \
-    && docker-php-ext-enable imagick \
-&& docker-php-ext-install mcrypt pdo_mysql
+
+# add ppa:ondrej/php
+RUN apt -y install software-properties-common && \
+    add-apt-repository ppa:ondrej/php
+RUN apt-get update -y && \
+    apt-get upgrade -y
+
+
+# Install PHP Packages
+RUN apt install php\
+    php-cli\
+    php-fpm\
+    php-json\
+    php-common\
+    php-mysql\
+    php-zip php-gd\ 
+    php-mbstring\ 
+    php-curl\ 
+    php-xml\
+    php-pear\
+    php-bcmath
 
 # Install Composer
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends git zip
+    apt-get install -y git zip
 RUN curl -sS https://getcomposer.org/installer | php -- \
 --install-dir=/usr/bin --filename=composer && chmod +x /usr/bin/composer 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+
+# Install App
 COPY /src /var/www/html
 CMD bash -c "composer install && composer update && php artisan serve"
 EXPOSE 8000
