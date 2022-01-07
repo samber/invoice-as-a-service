@@ -1,8 +1,6 @@
 FROM php:7.4-fpm
 
-# add ppa:ondrej/php
-RUN apt install -y software-properties-common 
-RUN add-apt-repository ppa:ondrej/php
+# Update
 RUN apt-get update -y && \
     apt-get upgrade -y
 
