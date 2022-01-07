@@ -4,21 +4,6 @@ FROM php:7.4-fpm
 RUN apt-get update -y && \
     apt-get upgrade -y
 
-
-# Install PHP Packages
-RUN apt install -y php\
-    php-cli\
-    php-fpm\
-    php-json\
-    php-common\
-    php-mysql\
-    php-zip php-gd\ 
-    php-mbstring\ 
-    php-curl\ 
-    php-xml\
-    php-pear\
-    php-bcmath
-
 # Install Composer
 RUN apt-get update -y && \
     apt-get install -y git zip
