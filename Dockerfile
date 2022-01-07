@@ -11,6 +11,6 @@ RUN apt-get update && \
 RUN curl -sS https://getcomposer.org/installer | php -- \
 --install-dir=/usr/bin --filename=composer && chmod +x /usr/bin/composer 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
-
+COPY /src /var/www/html
 CMD bash -c "composer install && php artisan serve"
 EXPOSE 8000
