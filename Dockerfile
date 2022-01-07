@@ -1,4 +1,4 @@
-FROM php:7.1.3-fpm
+FROM php:7.4-fpm
 RUN apt-get update && apt-get install -y libmcrypt-dev \
     mysql-client libmagickwand-dev --no-install-recommends \
     && pecl install imagick \
