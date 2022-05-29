@@ -9,7 +9,7 @@
         "barryvdh/laravel-cors": "^0.11.4",
         "dompdf/dompdf": "~1.0",
         "fideloper/proxy": "~4.0",
-        "guzzlehttp/guzzle": "=6.3",
+        "guzzlehttp/guzzle": "=6.5.6",
         "laravel/framework": "6.20.*",
         "laravel/helpers": "^1.4",
         "laravel/tinker": "~1.0"
