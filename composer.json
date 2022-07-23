@@ -7,7 +7,7 @@
     "require": {
         "php": ">=7.3.0",
         "barryvdh/laravel-cors": "^0.11.4",
-        "dompdf/dompdf": "~1.0",
+        "dompdf/dompdf": "~2.0",
         "fideloper/proxy": "~4.0",
         "guzzlehttp/guzzle": "=6.5.8",
         "laravel/framework": "6.20.*",
