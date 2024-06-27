@@ -1,5 +1,5 @@
 
-# docker buildx build --pull --push --platform linux/amd64 -t samber/invoice-as-a-service:2024-06-07 .   
+# docker buildx build --pull --push --platform linux/amd64 -t docker.io/samber/invoice-as-a-service:2024-06-07 .   
 
 FROM php:8.0-fpm
 
