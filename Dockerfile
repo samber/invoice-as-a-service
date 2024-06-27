@@ -3,13 +3,16 @@ FROM php:8.0-fpm
 WORKDIR .
 
 # Install system dependencies
-RUN apt-get update && apt-get install -y \
-    zip \
-    unzip \
-    curl \
-    libfreetype6-dev \
-    libjpeg62-turbo-dev \
-    libpng-dev
+RUN apt-get update \
+    && apt-get install -y \
+        zip \
+        unzip \
+        curl \
+        libfreetype6-dev \
+        libjpeg62-turbo-dev \
+        libpng-dev \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install GD extension
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
