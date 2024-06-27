@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  invoice-as-service:
+  invoice-as-a-service:
     build:
       context: .
       dockerfile: Dockerfile
