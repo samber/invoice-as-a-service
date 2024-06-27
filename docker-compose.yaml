@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./public:/var/www/html/public
+      - ./config:/var/www/html/config
