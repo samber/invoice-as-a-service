@@ -94,6 +94,7 @@ class InvoiceController extends Controller
         $due_date = date("d M Y", $data['due_date']);
         $paid = !array_key_exists('paid', $data) || $data['paid'] != true ? false : $data['due_date'];
         $payment_link = !array_key_exists('payment_link', $data) || $data['payment_link'] == NULL ? NULL : $data['payment_link'];
+        $notes = !array_key_exists('notes', $data) || $data['notes'] == NULL ? NULL : $data['notes'];
         $decimals = !array_key_exists('decimals', $data) || $data['decimals'] == NULL ? 2 : $data['decimals'];
         
         $lang = $data['lang'];
@@ -124,7 +125,7 @@ class InvoiceController extends Controller
             $due_date,
             $paid,
             $payment_link,
-            $data['notes'],
+            $notes,
             $data['items'],
             $data['customer'],
             $data['company'],
