@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\App;
 use App\Helpers\PDF;
 use App\Helpers\Storage;
 use App\Rules\OtherField;
@@ -22,7 +23,7 @@ class InvoiceController extends Controller
             // required
             'id' => 'required|string|max:255',
             'currency' => 'required|string|max:5',
-            'lang' => 'required|string|in:en',
+            'lang' => 'required|string|in:en,es',
             'date' => 'required|integer|min:0|max:2147483647',
             'due_date' => 'required|integer|min:0|max:2147483647',
             'paid' => 'nullable|boolean',
@@ -95,6 +96,9 @@ class InvoiceController extends Controller
         $payment_link = !array_key_exists('payment_link', $data) || $data['payment_link'] == NULL ? NULL : $data['payment_link'];
         $notes = !array_key_exists('notes', $data) || $data['notes'] == NULL ? NULL : $data['notes'];
         $decimals = !array_key_exists('decimals', $data) || $data['decimals'] == NULL ? 2 : $data['decimals'];
+        
+        $lang = $data['lang'];
+        App::setLocale($lang);
 
         $sub_total = 0;
         $tax_total = 0;
