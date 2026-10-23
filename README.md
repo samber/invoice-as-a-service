@@ -37,13 +37,13 @@ $ curl "https://invoice-as-a-service.cleverapps.io/api/invoice/generate" \
         "date": 1520852472,
         "due_date": 1521457272,
         "paid": false,
-        "payment_link": "https://screeb.app/user/invoices/42/pay",
+        "payment_link": "https://apple.com/user/invoices/42/pay",
         "decimals": 2,
         "notes": "Lorem ipsum dolor sit amet.",
 
         "items": [
             {
-                "title": "'Growth' plan Screeb.app",
+                "title": "'Growth' plan Apple.com",
                 "description": "1 year subscription",
                 "price": 42,
                 "quantity": 1,
@@ -62,14 +62,14 @@ $ curl "https://invoice-as-a-service.cleverapps.io/api/invoice/generate" \
         },
 
         "company": {
-            "summary": "Screeb",
+            "summary": "Apple",
             "address_line_1": "123, place de Bretagne",
             "address_line_2": "44000 Nantes",
             "address_line_3": "France",
             "address_line_4": "Earth",
             "phone": "1-888-548-0034",
-            "email": "billing@screeb.app",
-            "logo_url": "https://raw.githubusercontent.com/samber/invoice-as-a-service/master/screeb-logo.png",
+            "email": "billing@apple.com",
+            "logo_url": "https://raw.githubusercontent.com/samber/invoice-as-a-service/master/apple-logo.png",
             "other": [
                 "EMEA office",
                 {
@@ -133,7 +133,7 @@ Here => [crocomo2744.github.io/Invoicing-form](https://crocomo2744.github.io/Inv
 | **date** | integer | yes | Timestamp of invoice creation date | 1520852472 |
 | **due_date** | integer | yes | Timestamp of invoice due date | 1521457272 |
 | **paid** | boolean | no | Adding a "paid" image (default: false) | false |
-| **payment_link** | string | no | Payment link | "https://<span></span>screeb.app/user/invoices/42/pay" |
+| **payment_link** | string | no | Payment link | "https://<span></span>apple.com/user/invoices/42/pay" |
 | **decimals** | integer | no | Number decimals for prices (default: 2) | 2 |
 | **notes** | string | no | Terms, conditions or anything you have to write in order to edit a valid invoice. | "Lorem ipsum dolor sit amet." |
 | **items** | array | yes | List of items | [ Item(...), Item(...) ] |
@@ -148,7 +148,7 @@ Here => [crocomo2744.github.io/Invoicing-form](https://crocomo2744.github.io/Inv
 
 | Property | Type | Required | Description | Example |
 | --- | --- | :---: | --- | --- |
-| **title** | string | yes | Product or service name | "'Growth' plan Screeb.app" |
+| **title** | string | yes | Product or service name | "'Growth' plan Apple.com" |
 | **description** | string | no | Product or service description | "1 year subscription" |
 | **price** | float | yes | Product or service price | 42 |
 | **quantity** | float | no | Product or service quantity (default: 1) | 1 |
@@ -172,13 +172,13 @@ Here => [crocomo2744.github.io/Invoicing-form](https://crocomo2744.github.io/Inv
 
 | Property | Type | Required | Description | Example |
 | --- | --- | :---: | --- | --- |
-| **summary** | string | yes | Your organisation name | "Screeb" |
+| **summary** | string | yes | Your organisation name | "Apple" |
 | **address_line_1** | string | yes | Customer address, line 1 | "123, place de Bretagne" |
 | **address_line_2** | string | no | Customer address, line 2 | "44000 Nantes" |
 | **address_line_3** | string | no | Customer address, line 3 | "France" |
 | **address_line_4** | string | no | Customer address, line 4 | "Earth" |
 | **phone** | string | no | Customer phone number | "1-888-548-0034" |
-| **email** | string | no | Customer email address | "billing@screeb.app" |
+| **email** | string | no | Customer email address | "billing@apple.com" |
 | **logo_url** | string | no | URL of your company logo | "https://<span></span>acme.corp/logo.png" |
 | **logo_b64** | string | no | Base64 encoded image of your company logo | "data:image/png;base64,........." |
 | **siret** (deprecated) | string | no | French company identification number | "539 138 107 00021" |
