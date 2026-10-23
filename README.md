@@ -3,9 +3,9 @@
 [![tests](https://github.com/samber/invoice-as-a-service/actions/workflows/tests.yaml/badge.svg)](https://github.com/samber/invoice-as-a-service/actions/workflows/tests.yaml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-Create professional PDF invoices from a simple web request. Use your own template, and sign every PDF with your own certificate.
+Create **professional PDF invoices** from a simple web request. Use **your own template**, **sign every PDF** with your own certificate, and **send it to remote storage** (S3, FTP, Zapier, email, webhook).
 
-Run it on your own server, or use the hosted version.
+Run it **on your own server**, or use the **hosted version**.
 
 ![Example invoice](example.png)
 
@@ -31,13 +31,13 @@ curl "https://invoice-as-a-service.cleverapps.io/api/invoice/generate" \
   }'
 ```
 
-The response is the PDF (`201`, `application/pdf`). Open `invoice.pdf`.
+The response is **the PDF** (`201`, `application/pdf`). Open `invoice.pdf`.
 
-The hosted endpoint is run best effort, without an SLA. It receives your invoice data and any FTP or webhook credentials you put in the payload. Self-host when that matters.
+The hosted endpoint is run **best effort, without an SLA**. It receives your invoice data and any FTP or webhook credentials you put in the payload. **Self-host when that matters.**
 
 ## Self-host
 
-Requirements: PHP 8.5 with the `gd` extension, and Composer.
+Requirements: **PHP 8.5** with the **`gd` extension**, and **Composer**.
 
 ```sh
 composer install
@@ -50,17 +50,17 @@ Optional features read their settings from environment variables. Copy `.env.dis
 
 ## Where the PDF goes
 
-The PDF is always returned in the HTTP response. Add an object to the payload to also send it to:
+The PDF is **always returned in the HTTP response**. Add an object to the payload to also send it to:
 
-- AWS S3, or any S3-compatible storage, through a presigned URL (`s3`)
-- an FTP server (`ftp`)
-- a webhook (`webhook`)
-- an email, with the PDF attached, through your SMTP server (`email`)
-- Zapier, through a "Catch hook" trigger, to reach Drive, Dropbox and others (`zapier`)
+- **AWS S3**, or any S3-compatible storage, through a presigned URL (`s3`)
+- an **FTP server** (`ftp`)
+- a **webhook** (`webhook`)
+- an **email**, with the PDF attached, through your SMTP server (`email`)
+- **Zapier**, through a "Catch hook" trigger, to reach Drive, Dropbox and others (`zapier`)
 
 ## What it is not
 
-It renders one invoice per request from the data you send. It stores no invoices, keeps no customers or invoice numbers, and computes no payments. Use an accounting tool for those.
+It renders one invoice per request from the data you send. It **stores no invoices**, keeps no customers or invoice numbers, and computes no payments. Use an accounting tool for those.
 
 ## Reference
 
