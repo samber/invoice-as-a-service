@@ -3,7 +3,7 @@
 [![tests](https://github.com/samber/invoice-as-a-service/actions/workflows/tests.yaml/badge.svg)](https://github.com/samber/invoice-as-a-service/actions/workflows/tests.yaml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-Create professional PDF invoices from a simple web request.
+Create professional PDF invoices from a simple web request. Use your own template, and sign every PDF with your own certificate.
 
 Run it on your own server, or use the hosted version.
 
