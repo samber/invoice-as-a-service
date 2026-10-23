@@ -25,9 +25,21 @@ curl "https://invoice-as-a-service.cleverapps.io/api/invoice/generate" \
     "lang": "en",
     "date": 1520852472,
     "due_date": 1521457272,
-    "items": [{ "title": "Growth plan", "price": 42, "tax": 20 }],
-    "customer": { "summary": "John Doe", "address_line_1": "1 Main Street" },
-    "company": { "summary": "Acme", "address_line_1": "2 High Street" }
+    "items": [
+      {
+        "title": "Growth plan",
+        "price": 42,
+        "tax": 20
+      }
+    ],
+    "customer": {
+      "summary": "John Doe",
+      "address_line_1": "1 Main Street"
+    },
+    "company": {
+      "summary": "Acme",
+      "address_line_1": "2 High Street"
+    }
   }'
 ```
 
