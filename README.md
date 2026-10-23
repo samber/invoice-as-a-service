@@ -81,7 +81,6 @@ It renders one invoice per request from the data you send. It **stores no invoic
 ## Reference
 
 - [API reference](docs/API.md): every property, destination option, PDF metadata and PDF signature.
-- [Invoice form](https://crocomo2744.github.io/Invoicing-form/): a user interface by a contributor.
 
 ## Contribute
 
