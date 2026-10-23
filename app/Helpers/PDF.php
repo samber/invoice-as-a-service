@@ -30,8 +30,14 @@ class PDF
     public $tax_total;
     public $total;
 
-    public function __construct($id, $currency, $lang, $date, $due_date, $paid, $payment_link, $purchase_order, $notes, $items, $customer, $company, $sub_total, $tax_total, $total)
+    public $decimals;
+    // Example of the number 1234.56, see NumberFormat.
+    public $number_format;
+
+    public function __construct($id, $currency, $lang, $date, $due_date, $paid, $payment_link, $purchase_order, $notes, $items, $customer, $company, $sub_total, $tax_total, $total, $decimals = 2, $number_format = null)
     {
+        $this->decimals = $decimals;
+        $this->number_format = NumberFormat::resolve($number_format);
         $this->id = $id;
         $this->currency = $currency;
         $this->lang = $lang;
@@ -91,6 +97,24 @@ class PDF
         $pdf->addInfo('Producer', self::GENERATOR);
         $pdf->addInfo('CreationDate', $now);
         $pdf->addInfo('ModDate', $now);
+    }
+
+    // Totals: always `decimals` decimals.
+    public function amount($value)
+    {
+        return NumberFormat::format($value, $this->decimals, $this->number_format);
+    }
+
+    // Unit prices: at least `decimals` decimals, more when the price needs them.
+    public function price($value)
+    {
+        return NumberFormat::formatAuto($value, $this->decimals, $this->number_format);
+    }
+
+    // Quantities and tax rates: only the decimals they need.
+    public function number($value)
+    {
+        return NumberFormat::formatAuto($value, 0, $this->number_format);
     }
 
     public function toString()

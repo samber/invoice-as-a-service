@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\App;
 use App\Helpers\PDF;
 use App\Helpers\Storage;
 use App\Helpers\Email;
+use App\Helpers\NumberFormat;
+use App\Rules\NumberFormatExample;
 use App\Rules\OtherField;
 use App\Rules\Base64Image;
 
@@ -32,6 +34,7 @@ class InvoiceController extends Controller
             // optional
             'purchase_order' => 'nullable|string|max:255',
             'decimals' => 'nullable|integer|min:0|max:10',
+            'number_format' => ['nullable', 'string', new NumberFormatExample()],
             'notes' => 'nullable|string|max:65535',
 
             // items
@@ -107,6 +110,8 @@ class InvoiceController extends Controller
         $notes = !array_key_exists('notes', $data) || $data['notes'] == NULL ? NULL : $data['notes'];
         $decimals = !array_key_exists('decimals', $data) || $data['decimals'] == NULL ? 2 : $data['decimals'];
         
+        $number_format = NumberFormat::resolve($data['number_format'] ?? NULL);
+
         $lang = $data['lang'];
         App::setLocale($lang);
 
@@ -142,7 +147,9 @@ class InvoiceController extends Controller
             $data['company'],
             $sub_total,
             $tax_total,
-            $total
+            $total,
+            $decimals,
+            $number_format
         );
 
         $doc = $pdf->build('default');
@@ -181,7 +188,7 @@ class InvoiceController extends Controller
                     'id' => $data['id'],
                     'company' => $data['company']['summary'],
                     'customer' => $data['customer']['summary'],
-                    'total' => number_format($total, $decimals),
+                    'total' => NumberFormat::format($total, $decimals, $number_format),
                     'currency' => $data['currency'],
                     'due_date' => $due_date,
                     'purchase_order' => $purchase_order,
