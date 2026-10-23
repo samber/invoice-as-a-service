@@ -2,6 +2,95 @@
 
 Endpoint: `POST /api/invoice/generate`, JSON body. See the [README](../README.md) for a quick start.
 
+## Full example
+
+Every property, with every destination. Each destination object is optional: remove the ones you do not use. The credentials and URLs are placeholders.
+
+```sh
+curl "https://invoice-as-a-service.cleverapps.io/api/invoice/generate" \
+  -X POST -H "content-type: application/json" \
+  -o invoice.pdf \
+  -d '{
+    "id": "42",
+    "currency": "€",
+    "lang": "en",
+    "date": 1520852472,
+    "due_date": 1521457272,
+    "paid": false,
+    "payment_link": "https://apple.com/user/invoices/42/pay",
+    "purchase_order": "PO-2018-0042",
+    "decimals": 2,
+    "notes": "Payment due within 30 days.",
+    "items": [
+      {
+        "title": "'Growth' plan Apple.com",
+        "description": "1 year subscription",
+        "price": 42,
+        "quantity": 1,
+        "tax": 20
+      },
+      {
+        "title": "Priority support",
+        "description": "Extra seats, billed per seat",
+        "price": 12.5,
+        "quantity": 2,
+        "tax": 20
+      }
+    ],
+    "customer": {
+      "summary": "John Doe",
+      "address_line_1": "Baxter Building, 42nd street, Madison Avenue",
+      "address_line_2": "Manhattan, NY, 11234",
+      "address_line_3": "United States",
+      "address_line_4": "Earth",
+      "phone": "1-888-548-0034",
+      "email": "john@gmail.com"
+    },
+    "company": {
+      "summary": "Apple",
+      "address_line_1": "123, place de Bretagne",
+      "address_line_2": "44000 Nantes",
+      "address_line_3": "France",
+      "address_line_4": "Earth",
+      "phone": "1-888-548-0034",
+      "email": "billing@apple.com",
+      "logo_url": "https://raw.githubusercontent.com/samber/invoice-as-a-service/master/apple-logo.png",
+      "other": [
+        "EMEA office",
+        {
+          "title": "Business hours",
+          "content": "9am - 6pm"
+        }
+      ]
+    },
+    "s3": {
+      "presigned_url": "https://my-bucket.s3.eu-central-1.amazonaws.com/invoice-42.pdf?X-Amz-Signature=xxxx"
+    },
+    "ftp": {
+      "host": "ftp.example.com",
+      "username": "ftpuser",
+      "password": "change-me",
+      "path": "/var/html/share/"
+    },
+    "webhook": {
+      "url": "https://webhook.example.com/invoice/store",
+      "headers": {
+        "x-token": "change-me"
+      }
+    },
+    "zapier": {
+      "zap_url": "https://hooks.zapier.com/hooks/catch/xxxxxxx/yyyyyy",
+      "filename": "invoice-42.pdf"
+    },
+    "email": {
+      "to": "john@gmail.com",
+      "cc": [
+        "accounting@gmail.com"
+      ]
+    }
+  }'
+```
+
 ## Request properties
 
 | Property           | Type    | Required | Description                                                                       | Example                                               |
