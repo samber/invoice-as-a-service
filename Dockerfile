@@ -1,7 +1,7 @@
 
 # docker buildx build --pull --push --platform linux/amd64 -t docker.io/samber/invoice-as-a-service:2024-06-07 .   
 
-FROM php:8.0-fpm
+FROM php:8.2.35-fpm
 
 WORKDIR .
 

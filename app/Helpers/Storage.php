@@ -5,13 +5,16 @@ namespace App\Helpers;
 use Log;
 use GuzzleHttp;
 
+use Illuminate\Support\Str;
 use League\Flysystem\Filesystem;
-use League\Flysystem\Adapter\Ftp as Adapter;
+use League\Flysystem\FilesystemException;
+use League\Flysystem\Ftp\FtpAdapter;
+use League\Flysystem\Ftp\FtpConnectionOptions;
 
 class Storage
 {
 
-    private $local_path;
+    private $doc;
 
     public function __construct($doc)
     {
@@ -37,7 +40,7 @@ class Storage
             $reason = NULL;
             $message = NULL;
             if ($err->hasResponse()) {
-                $message = \GuzzleHttp\Psr7\str($err->getResponse());
+                $message = \GuzzleHttp\Psr7\Message::toString($err->getResponse());
                 Log::error($message);
                 $message = explode("\r\n", $message);
                 $reason = $err->getResponse()->getReasonPhrase();
@@ -62,11 +65,11 @@ class Storage
      * @return array                 Upload's result
      */
     public function uploadFTP($FTPcredentials, $fileName) {
-        if (ends_with($FTPcredentials["path"], "/") == false) {
+        if (!Str::endsWith($FTPcredentials["path"], "/")) {
             $FTPcredentials["path"] = $FTPcredentials["path"] . "/";
         }
 
-        $adapter = new Adapter([
+        $adapter = new FtpAdapter(FtpConnectionOptions::fromArray([
             'host' => $FTPcredentials["host"],
             'username' => $FTPcredentials["username"],
             'password' => $FTPcredentials["password"],
@@ -75,27 +78,18 @@ class Storage
             'passive' => isset($FTPcredentials["passive"]) ? $FTPcredentials["passive"] : true,
             'ssl' => isset($FTPcredentials["ssl"]) ? $FTPcredentials["ssl"] : false,
             'timeout' => 300
-        ]);
+        ]));
 
+        $filesystem = new Filesystem($adapter, ['visibility' => 'public']);
+
+        // Flysystem connects lazily: connection and write errors both surface from write().
         try {
-            $adapter->getConnection();
-        } catch (\RuntimeException $e) {
+            $filesystem->write($fileName, $this->doc);
+        } catch (FilesystemException $e) {
             return [
                 'uploaded' => false,
                 'message' => $e->getMessage(),
                 'path' => null,
-            ];
-        }
-
-        $filesystem = new Filesystem($adapter);
-
-        $response = $filesystem->write($fileName , $this->doc, ['visibility' => 'public']);
-
-        if (!$response) {
-            return [
-                'uploaded' => false,
-                'message' => "The invoice could not be uploaded to the FTP server.",
-                'path' => null
             ];
         }
 
@@ -134,7 +128,7 @@ class Storage
             $reason = NULL;
             $message = NULL;
             if ($err->hasResponse()) {
-                $message = \GuzzleHttp\Psr7\str($err->getResponse());
+                $message = \GuzzleHttp\Psr7\Message::toString($err->getResponse());
                 Log::error($message);
                 $message = explode("\r\n", $message);
                 $reason = $err->getResponse()->getReasonPhrase();
@@ -196,7 +190,7 @@ class Storage
             $reason = NULL;
             $message = NULL;
             if ($err->hasResponse()) {
-                $message = \GuzzleHttp\Psr7\str($err->getResponse());
+                $message = \GuzzleHttp\Psr7\Message::toString($err->getResponse());
                 Log::error($message);
                 $message = explode("\r\n", $message);
                 $reason = $err->getResponse()->getReasonPhrase();

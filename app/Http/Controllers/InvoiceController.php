@@ -12,7 +12,6 @@ use App\Helpers\PDF;
 use App\Helpers\Storage;
 use App\Rules\OtherField;
 use App\Rules\Base64Image;
-use Alphametric\Validation\Rules\EncodedImage;
 
 class InvoiceController extends Controller
 {
@@ -103,7 +102,7 @@ class InvoiceController extends Controller
         $sub_total = 0;
         $tax_total = 0;
         foreach ($data['items'] as $i => $item) {
-            if ($item['quantity'] == NULL)
+            if (!isset($item['quantity']))
                 $data['items'][$i]['quantity'] = 1;
 
             $tax_rate = $item['tax'] == NULL ? 0 : $item['tax'];

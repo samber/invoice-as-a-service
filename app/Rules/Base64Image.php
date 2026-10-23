@@ -11,6 +11,8 @@ class Base64Image implements Rule
 
     private $mimes = [];
 
+    private $file;
+
     /**
      * Create a new rule instance.
      *
@@ -53,7 +55,7 @@ class Base64Image implements Rule
     {
         $this->file = tmpfile();
         fwrite($this->file, base64_decode(Str::after($data, 'base64,')));
-        return new UploadedFile(stream_get_meta_data($this->file)['uri'], 'image', 'text/plain', null, null, true);
+        return new UploadedFile(stream_get_meta_data($this->file)['uri'], 'image', 'text/plain', null, true);
     }
 
     /**
