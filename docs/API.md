@@ -93,26 +93,27 @@ curl "https://invoice-as-a-service.cleverapps.io/api/invoice/generate" \
 
 ## Request properties
 
-| Property           | Type    | Required | Description                                                                       | Example                                               |
-| ------------------ | ------- | :------: | --------------------------------------------------------------------------------- | ----------------------------------------------------- |
-| **id**             | string  |   yes    | Your invoice reference                                                            | "42"                                                  |
-| **currency**       | string  |   yes    | Your billing currency                                                             | "€"                                                   |
-| **lang**           | string  |   yes    | Invoice language: `en` or `es`                                                    | "en"                                                  |
-| **date**           | integer |   yes    | Timestamp of invoice creation date                                                | 1520852472                                            |
-| **due_date**       | integer |   yes    | Timestamp of invoice due date                                                     | 1521457272                                            |
-| **paid**           | boolean |    no    | Adding a "paid" image (default: false)                                            | false                                                 |
-| **payment_link**   | string  |    no    | Payment link                                                                      | "https://<span></span>apple.com/user/invoices/42/pay" |
-| **purchase_order** | string  |    no    | Customer purchase order reference, shown in the invoice header                    | "PO-2018-0042"                                        |
-| **decimals**       | integer |    no    | Number decimals for prices (default: 2)                                           | 2                                                     |
-| **notes**          | string  |    no    | Terms, conditions or anything you have to write in order to edit a valid invoice. | "Lorem ipsum dolor sit amet."                         |
-| **items**          | array   |   yes    | List of items                                                                     | [ Item(...), Item(...) ]                              |
-| **customer**       | object  |   yes    | Customer infos                                                                    | Customer(...)                                         |
-| **company**        | object  |   yes    | Company infos                                                                     | Company(...)                                          |
-| **s3**             | object  |    no    | AWS S3 invoice upload                                                             | S3Upload(...)                                         |
-| **ftp**            | object  |    no    | FTP invoice upload                                                                | FTPUpload(...)                                        |
-| **webhook**        | object  |    no    | Webhook invoice upload                                                            | WebhookUpload(...)                                    |
-| **zapier**         | object  |    no    | Zapier invoice upload                                                             | ZapierUpload(...)                                     |
-| **email**          | object  |    no    | Send the invoice by email                                                         | Email(...)                                            |
+| Property           | Type    | Required | Description                                                                                                                                | Example                                               |
+| ------------------ | ------- | :------: | ------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------- |
+| **id**             | string  |   yes    | Your invoice reference                                                                                                                     | "42"                                                  |
+| **currency**       | string  |   yes    | Your billing currency                                                                                                                      | "€"                                                   |
+| **lang**           | string  |   yes    | Invoice language: `en` or `es`                                                                                                             | "en"                                                  |
+| **date**           | integer |   yes    | Timestamp of invoice creation date                                                                                                         | 1520852472                                            |
+| **due_date**       | integer |   yes    | Timestamp of invoice due date                                                                                                              | 1521457272                                            |
+| **paid**           | boolean |    no    | Adding a "paid" image (default: false)                                                                                                     | false                                                 |
+| **payment_link**   | string  |    no    | Payment link                                                                                                                               | "https://<span></span>apple.com/user/invoices/42/pay" |
+| **purchase_order** | string  |    no    | Customer purchase order reference, shown in the invoice header                                                                             | "PO-2018-0042"                                        |
+| **decimals**       | integer |    no    | Number decimals for prices (default: 2)                                                                                                    | 2                                                     |
+| **number_format**  | string  |    no    | How numbers are printed, as an example of 1234.56 (default: `INVOICE_NUMBER_FORMAT`, else "1,234.56"). See [Number format](#number-format) | "1.234,56"                                            |
+| **notes**          | string  |    no    | Terms, conditions or anything you have to write in order to edit a valid invoice.                                                          | "Lorem ipsum dolor sit amet."                         |
+| **items**          | array   |   yes    | List of items                                                                                                                              | [ Item(...), Item(...) ]                              |
+| **customer**       | object  |   yes    | Customer infos                                                                                                                             | Customer(...)                                         |
+| **company**        | object  |   yes    | Company infos                                                                                                                              | Company(...)                                          |
+| **s3**             | object  |    no    | AWS S3 invoice upload                                                                                                                      | S3Upload(...)                                         |
+| **ftp**            | object  |    no    | FTP invoice upload                                                                                                                         | FTPUpload(...)                                        |
+| **webhook**        | object  |    no    | Webhook invoice upload                                                                                                                     | WebhookUpload(...)                                    |
+| **zapier**         | object  |    no    | Zapier invoice upload                                                                                                                      | ZapierUpload(...)                                     |
+| **email**          | object  |    no    | Send the invoice by email                                                                                                                  | Email(...)                                            |
 
 ### Item
 
@@ -162,6 +163,24 @@ curl "https://invoice-as-a-service.cleverapps.io/api/invoice/generate" \
 | ----------- | ------ | :------: | ----------- | ---------------- |
 | **title**   | string |   yes    | Field name  | "Twitter handle" |
 | **content** | string |   yes    | Field value | "@foobar"        |
+
+### Number format
+
+`number_format` is an example of the number 1234.56. The invoice and the email print every number the same way:
+
+| `number_format`        | Output                           |
+| ---------------------- | -------------------------------- |
+| `"1,234.56"` (default) | 1,234.56                         |
+| `"1.234,56"`           | 1.234,56                         |
+| `"1 234,56"`           | 1 234,56 (narrow no-break space) |
+| `"1'234.56"`           | 1'234.56                         |
+| `"1234.56"`            | 1234.56                          |
+| `"1234,56"`            | 1234,56                          |
+
+- The digits must be `1`, `234` and `56`. The decimal separator is `.` or `,`. The thousands separator is optional, is any single character that is not a letter or digit, and must differ from the decimal separator.
+- The number of decimals comes from `decimals`, not from the example.
+- An invalid example is rejected with a 422.
+- Operators set the default for every request with the `INVOICE_NUMBER_FORMAT` environment variable (see `.env.dist`). An invalid value is ignored, logged, and replaced by "1,234.56".
 
 ### S3 upload
 
