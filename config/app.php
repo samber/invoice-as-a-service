@@ -208,4 +208,38 @@ return [
 
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Previous Encryption Keys
+    |--------------------------------------------------------------------------
+    |
+    | Keys that were used before a key rotation. Comma-separated list read
+    | from APP_PREVIOUS_KEYS, so values encrypted with an old key can still
+    | be decrypted.
+    |
+    */
+
+    'previous_keys' => [
+        ...array_filter(
+            explode(',', (string) env('APP_PREVIOUS_KEYS', ''))
+        ),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Maintenance Mode Driver
+    |--------------------------------------------------------------------------
+    |
+    | The "file" driver stores the maintenance flag on disk, so it works with
+    | a single server. The "cache" driver shares it between servers.
+    |
+    | Supported drivers: "file", "cache"
+    |
+    */
+
+    'maintenance' => [
+        'driver' => env('APP_MAINTENANCE_DRIVER', 'file'),
+        'store' => env('APP_MAINTENANCE_STORE', 'database'),
+    ],
+
 ];
