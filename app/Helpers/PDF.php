@@ -72,7 +72,11 @@ class PDF
         $pdf->render();
         $this->addMetadata($pdf);
 
-        return $pdf->output();
+        // Signing must come last: any later byte change would invalidate the signature.
+        $signer = PdfSigner::fromConfig();
+        $output = $pdf->output();
+
+        return $signer === null ? $output : $signer->sign($output);
     }
 
     // Dompdf already sets Title (from the template <title>) and defaults Producer and the dates;

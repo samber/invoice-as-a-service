@@ -268,7 +268,32 @@ Every generated PDF carries these document properties:
 - **Creator** and **Producer**: `invoice-as-a-service`
 - **CreationDate** and **ModDate**: generation time, in UTC (not the invoice `date`)
 
-The PDF is not digitally signed.
+### PDF signature
+
+The operator can sign every generated PDF with a server-side key. The signature is never part of the request. It is an invisible CMS signature (`adbe.pkcs7.detached`, added as a PDF incremental update), so PDF readers show the document as signed and warn about any later edit. Without a key, the PDF is not signed.
+
+Set a certificate and its private key, both PEM encoded, with environment variables:
+
+| Variable | Description |
+| --- | --- |
+| **PDF_SIGN_CERT** | X.509 certificate, as plain text (`\n` accepted instead of real newlines) |
+| **PDF_SIGN_CERT_FILE_PATH** | Path to the certificate file, used when `PDF_SIGN_CERT` is empty |
+| **PDF_SIGN_KEY** | Private key, as plain text |
+| **PDF_SIGN_KEY_FILE_PATH** | Path to the private key file, used when `PDF_SIGN_KEY` is empty |
+| **PDF_SIGN_KEY_PASSPHRASE** | Passphrase of the private key (optional) |
+
+- Signing is on as soon as a certificate and a key are set. Nothing set means no signing.
+- Only one of the two set, an unreadable file, a wrong passphrase or a key that does not match the certificate fails the request with a server error. An invoice is never silently sent unsigned.
+- A self-signed certificate works, but readers show it as untrusted. Use a certificate from a CA trusted by your readers (for example an Adobe Approved Trust List one) to get a green check.
+
+Generate a self-signed pair for testing:
+
+```sh
+openssl req -x509 -newkey rsa:3072 -nodes -days 365 -subj "/CN=My Company" -keyout sign.key -out sign.crt
+PDF_SIGN_CERT_FILE_PATH=sign.crt PDF_SIGN_KEY_FILE_PATH=sign.key
+```
+
+Check a signed PDF with `pdfsig invoice.pdf` (poppler) or Adobe Reader.
 
 ## Contribute
 
