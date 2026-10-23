@@ -100,6 +100,12 @@ aws configure
 node ./scripts/presign-upload-url.js <region> <my-bucket> invoices/201807250018--foobar@example.com.pdf
 ```
 
+## Show your support
+
+Give a ⭐️ if this project helped you!
+
+[![GitHub Sponsors](https://img.shields.io/github/sponsors/samber?style=for-the-badge)](https://github.com/sponsors/samber)
+
 ## License
 
 [MIT](LICENSE)
