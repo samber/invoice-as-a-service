@@ -8,6 +8,7 @@ return [
     'due_date' => 'Fecha de vencimiento',
     'number_abbreviation' => 'Nro',
     'payment_link' => 'Link de pago',
+    'purchase_order' => 'Orden de compra',
     'bussiness_details' => 'Detalle del emisor',
     'customer_details' => 'Detalle del receptor',
     'phone' => 'Telefono',
