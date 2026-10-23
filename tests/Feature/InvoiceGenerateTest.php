@@ -104,6 +104,27 @@ class InvoiceGenerateTest extends TestCase
         $this->postJson('/api/invoice/generate', $payload)->assertStatus(201);
     }
 
+    public function testGenerateRejectsZapierUrlOutsideZapier(): void
+    {
+        $payload = $this->payload(['zapier' => ['zap_url' => 'https://example.com/hooks/catch/1/abc/']]);
+
+        $this->postJson('/api/invoice/generate', $payload)->assertStatus(422)->assertJsonStructure(['zapier.zap_url']);
+    }
+
+    public function testGenerateRejectsUnresolvableWebhookUrl(): void
+    {
+        $payload = $this->payload(['webhook' => ['url' => 'https://no-such-host.invalid/hook']]);
+
+        $this->postJson('/api/invoice/generate', $payload)->assertStatus(422)->assertJsonStructure(['webhook.url']);
+    }
+
+    public function testGenerateRejectsUnresolvableS3Url(): void
+    {
+        $payload = $this->payload(['s3' => ['presigned_url' => 'https://no-such-host.invalid/key.pdf']]);
+
+        $this->postJson('/api/invoice/generate', $payload)->assertStatus(422)->assertJsonStructure(['s3.presigned_url']);
+    }
+
     public function testFtpConnectionFailureIsReported(): void
     {
         // Port 1 is reserved and closed: the connection is refused immediately.
