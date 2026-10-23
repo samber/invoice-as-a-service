@@ -94,6 +94,9 @@
                         <table class="meta">
                             <tr><td class="k">@lang('messages.date')</td><td>{{ $data->date }}</td></tr>
                             <tr><td class="k">@lang('messages.due_date')</td><td><b>{{ $data->due_date }}</b></td></tr>
+                            @if ($data->purchase_order)
+                                <tr><td class="k">@lang('messages.purchase_order')</td><td>{{ $data->purchase_order }}</td></tr>
+                            @endif
                             @if ($data->payment_link)
                                 <tr>
                                     <td class="k">@lang('messages.payment_link')</td>

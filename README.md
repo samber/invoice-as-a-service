@@ -38,6 +38,7 @@ $ curl "https://invoice-as-a-service.cleverapps.io/api/invoice/generate" \
         "due_date": 1521457272,
         "paid": false,
         "payment_link": "https://apple.com/user/invoices/42/pay",
+        "purchase_order": "PO-2018-0042",
         "decimals": 2,
         "notes": "Lorem ipsum dolor sit amet.",
 
@@ -141,6 +142,7 @@ Here => [crocomo2744.github.io/Invoicing-form](https://crocomo2744.github.io/Inv
 | **due_date** | integer | yes | Timestamp of invoice due date | 1521457272 |
 | **paid** | boolean | no | Adding a "paid" image (default: false) | false |
 | **payment_link** | string | no | Payment link | "https://<span></span>apple.com/user/invoices/42/pay" |
+| **purchase_order** | string | no | Customer purchase order reference, shown in the invoice header | "PO-2018-0042" |
 | **decimals** | integer | no | Number decimals for prices (default: 2) | 2 |
 | **notes** | string | no | Terms, conditions or anything you have to write in order to edit a valid invoice. | "Lorem ipsum dolor sit amet." |
 | **items** | array | yes | List of items | [ Item(...), Item(...) ] |

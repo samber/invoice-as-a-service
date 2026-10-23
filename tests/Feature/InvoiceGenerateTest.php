@@ -104,6 +104,51 @@ class InvoiceGenerateTest extends TestCase
         $this->postJson('/api/invoice/generate', $payload)->assertStatus(201);
     }
 
+    public function testGenerateAcceptsPurchaseOrder(): void
+    {
+        $this->postJson('/api/invoice/generate', $this->payload(['purchase_order' => 'PO-42']))->assertStatus(201);
+    }
+
+    public function testGenerateAcceptsNullPurchaseOrder(): void
+    {
+        $this->postJson('/api/invoice/generate', $this->payload(['purchase_order' => null]))->assertStatus(201);
+    }
+
+    public function testGenerateRejectsTooLongPurchaseOrder(): void
+    {
+        $this->postJson('/api/invoice/generate', $this->payload(['purchase_order' => str_repeat('a', 256)]))
+            ->assertStatus(422)
+            ->assertJsonStructure(['purchase_order']);
+    }
+
+    public function testGenerateRejectsNonStringPurchaseOrder(): void
+    {
+        $this->postJson('/api/invoice/generate', $this->payload(['purchase_order' => ['PO-42']]))
+            ->assertStatus(422)
+            ->assertJsonStructure(['purchase_order']);
+    }
+
+    public function testTemplateRendersPurchaseOrderOnlyWhenSet(): void
+    {
+        $render = function (?string $purchaseOrder, string $lang): string {
+            app()->setLocale($lang);
+            $pdf = new \App\Helpers\PDF(
+                'INV-1', 'EUR', $lang, '01 Jan 2024', '01 Feb 2024', false, null, $purchaseOrder, null,
+                [['title' => 'Consulting', 'price' => 100, 'quantity' => 1, 'tax' => 20, 'total' => 100]],
+                ['summary' => 'Customer Inc', 'address_line_1' => '1 Customer street'],
+                ['summary' => 'Company Inc', 'address_line_1' => '1 Company street'],
+                100, 20, 120
+            );
+
+            return view('invoices.default', ['data' => $pdf])->render();
+        };
+
+        $this->assertStringContainsString('Purchase order', $render('PO-42', 'en'));
+        $this->assertStringContainsString('PO-42', $render('PO-42', 'en'));
+        $this->assertStringContainsString('Orden de compra', $render('PO-42', 'es'));
+        $this->assertStringNotContainsString('Purchase order', $render(null, 'en'));
+    }
+
     public function testGenerateRejectsZapierUrlOutsideZapier(): void
     {
         $payload = $this->payload(['zapier' => ['zap_url' => 'https://example.com/hooks/catch/1/abc/']]);

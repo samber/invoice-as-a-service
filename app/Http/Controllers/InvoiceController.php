@@ -29,6 +29,7 @@ class InvoiceController extends Controller
             'payment_link' => 'nullable|string|active_url',
 
             // optional
+            'purchase_order' => 'nullable|string|max:255',
             'decimals' => 'nullable|integer|min:0|max:10',
             'notes' => 'nullable|string|max:65535',
 
@@ -93,6 +94,7 @@ class InvoiceController extends Controller
         $due_date = date("d M Y", $data['due_date']);
         $paid = !array_key_exists('paid', $data) || $data['paid'] != true ? false : $data['due_date'];
         $payment_link = !array_key_exists('payment_link', $data) || $data['payment_link'] == NULL ? NULL : $data['payment_link'];
+        $purchase_order = !array_key_exists('purchase_order', $data) || $data['purchase_order'] == NULL ? NULL : $data['purchase_order'];
         $notes = !array_key_exists('notes', $data) || $data['notes'] == NULL ? NULL : $data['notes'];
         $decimals = !array_key_exists('decimals', $data) || $data['decimals'] == NULL ? 2 : $data['decimals'];
         
@@ -124,6 +126,7 @@ class InvoiceController extends Controller
             $due_date,
             $paid,
             $payment_link,
+            $purchase_order,
             $notes,
             $data['items'],
             $data['customer'],

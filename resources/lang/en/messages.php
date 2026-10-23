@@ -8,6 +8,7 @@ return [
     'due_date' => 'Due date',
     'number_abbreviation' => '#',
     'payment_link' => 'Payment link',
+    'purchase_order' => 'Purchase order',
     'bussiness_details' => 'Business Details',
     'customer_details' => 'Customer Details',
     'phone' => 'Phone',
