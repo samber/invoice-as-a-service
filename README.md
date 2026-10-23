@@ -258,6 +258,18 @@ The response is JSON, like other destinations: `{"email": {"sent": true, "messag
 
 The provided logo_url (optional) must be accessible from the `invoice-as-a-service` API !
 
+### PDF metadata
+
+Every generated PDF carries these document properties:
+
+- **Title**: `Invoice <id>` (localized)
+- **Author**: `company.summary`
+- **Subject**: `Invoice for <customer.summary>` (localized)
+- **Creator** and **Producer**: `invoice-as-a-service`
+- **CreationDate** and **ModDate**: generation time, in UTC (not the invoice `date`)
+
+The PDF is not digitally signed.
+
 ## Contribute
 
 Hell yeah!

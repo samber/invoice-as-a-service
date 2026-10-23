@@ -34,6 +34,37 @@ class InvoiceGenerateTest extends TestCase
         $this->assertStringStartsWith('%PDF-', $response->getContent());
     }
 
+    // Info dictionary strings are stored as UTF-16BE with a BOM (see Cpdf::o_info).
+    private function pdfInfoString(string $label, string $value): string
+    {
+        return "/$label (\xFE\xFF" . mb_convert_encoding($value, 'UTF-16BE', 'UTF-8') . ')';
+    }
+
+    public function testGenerateSetsPdfMetadata(): void
+    {
+        $before = time();
+        $pdf = $this->postJson('/api/invoice/generate', $this->payload())->getContent();
+
+        $this->assertStringContainsString($this->pdfInfoString('Author', 'Company Inc'), $pdf);
+        $this->assertStringContainsString($this->pdfInfoString('Creator', 'invoice-as-a-service'), $pdf);
+        $this->assertStringContainsString($this->pdfInfoString('Producer', 'invoice-as-a-service'), $pdf);
+        $this->assertStringContainsString($this->pdfInfoString('Subject', 'Invoice for Customer Inc'), $pdf);
+
+        // Dates are plain ASCII, in UTC, set at generation time (not the invoice date).
+        $this->assertSame(1, preg_match("/\\/CreationDate \\(D:(\\d{14})\\+00'00'\\)/", $pdf, $m));
+        $created = \DateTimeImmutable::createFromFormat('YmdHis', $m[1], new \DateTimeZone('UTC'))->getTimestamp();
+        $this->assertGreaterThanOrEqual($before, $created);
+        $this->assertLessThanOrEqual(time(), $created);
+    }
+
+    public function testGenerateSetsPdfAuthorWithNonAsciiCompanyName(): void
+    {
+        $payload = $this->payload(['company' => ['summary' => 'Café Ünï Inc']]);
+        $pdf = $this->postJson('/api/invoice/generate', $payload)->getContent();
+
+        $this->assertStringContainsString($this->pdfInfoString('Author', 'Café Ünï Inc'), $pdf);
+    }
+
     public function testGenerateWithoutQuantityDefaultsToOne(): void
     {
         $payload = $this->payload();
