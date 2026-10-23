@@ -49,7 +49,9 @@ The hosted endpoint is run **best effort, without an SLA**. It receives your inv
 
 ## Self-host
 
-Requirements: **PHP 8.5** with the **`gd` extension**, and **Composer**.
+Requirements: **PHP 8.5**, **Composer**, and these PHP extensions: `dom`, `fileinfo`, `ftp`, `gd`, `libxml`, `mbstring`, `openssl`.
+
+`composer install` fails when one is missing, except `gd`, which dompdf needs to draw logos.
 
 ```sh
 composer install
