@@ -5,8 +5,6 @@
 
 Generate a PDF invoice from one JSON `POST`. Self-host it or use the hosted endpoint.
 
-Built with Laravel 13 and PHP 8.5, rendered with dompdf. Actively maintained, MIT licensed.
-
 ![Example invoice](example.png)
 
 [Example PDF](example.pdf)
