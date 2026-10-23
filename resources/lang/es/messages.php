@@ -24,5 +24,9 @@ return [
     'summary_title' => 'Total',
     'summary_subtotal' => 'Subtotal',
     'summary_taxes' => 'Impuestos',
-    'summary_total' => 'Total (incluye impuestos)'
+    'summary_total' => 'Total (incluye impuestos)',
+    'email_subject' => 'Factura :id de :company',
+    'email_greeting' => 'Hola :customer,',
+    'email_intro' => 'Adjuntamos la factura :id de :company.',
+    'email_signature' => 'Saludos cordiales, :company'
 ];
