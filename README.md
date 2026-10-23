@@ -10,6 +10,7 @@ Rendered file can be returned into the HTTP response or exported to:
 - AWS S3 (and any compatible storage destination)
 - FTP server
 - Webhook
+- Email (SMTP, PDF attached)
 - **Zapier**: "Catch hook" trigger, can be linked to Drive, Dropbox...
 
 ## Demo
@@ -108,6 +109,11 @@ $ curl "https://invoice-as-a-service.cleverapps.io/api/invoice/generate" \
         "zapier": {
             "zap_url": "https://hooks.zapier.com/hooks/catch/xxxxxxx/yyyyyy",
             "filename": "invoice-42.pdf"
+        },
+
+        "email": {
+            "to": "john@gmail.com",
+            "cc": ["accounting@gmail.com"]
         }
 
      }'
@@ -152,6 +158,7 @@ Here => [crocomo2744.github.io/Invoicing-form](https://crocomo2744.github.io/Inv
 | **ftp** | object | false | FTP invoice upload | FTPUpload(...) |
 | **webhook** | object | false | Webhook invoice upload | WebhookUpload(...) |
 | **zapier** | object | false | Zapier invoice upload | ZapierUpload(...) |
+| **email** | object | false | Send the invoice by email | Email(...) |
 
 ### Item:
 
@@ -233,6 +240,19 @@ Here => [crocomo2744.github.io/Invoicing-form](https://crocomo2744.github.io/Inv
 | --- | --- | :---: | --- | --- |
 | **zap_url** | string | true | URL of Zapier Hook | "https://hooks.zapier.com/hooks/catch/xxxxxxx/yyyyyy" |
 | **filename** | string | false | Filename that will be provided into Zapier Hook | "invoice-42.pdf" |
+
+### Email
+
+The PDF is attached to an email sent through the server's SMTP account. SMTP credentials are never part of the request: the operator sets them with the `MAIL_*` environment variables (see `.env.dist`). Subject and body are fixed server side and translated according to `lang`. `Reply-To` is `company.email` when set.
+
+| Property | Type | Required | Description | Example |
+| --- | --- | :---: | --- | --- |
+| **to** | string | true | Recipient address | "john@gmail.com" |
+| **cc** | array | false | Up to 10 copy recipients | ["accounting@gmail.com"] |
+| **bcc** | array | false | Up to 10 blind copy recipients | ["archive@apple.com"] |
+| **template** | string | false | Email template name (default: "default") | "default" |
+
+The response is JSON, like other destinations: `{"email": {"sent": true, "message": null, "recipients": [...]}}`. A mail failure returns `sent: false` and the error `message`, with HTTP 201.
 
 ## Notes
 

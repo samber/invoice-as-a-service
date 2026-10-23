@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\App;
 use App\Helpers\PDF;
 use App\Helpers\Storage;
+use App\Helpers\Email;
 use App\Rules\OtherField;
 use App\Rules\Base64Image;
 
@@ -65,6 +66,14 @@ class InvoiceController extends Controller
             'company.logo_b64' => ['nullable', new Base64Image(['png', 'jpg', 'jpeg', 'gif', 'bmp'])],
             'company.siret' => 'nullable|string|min:3|max:255',    // @Deprecated
             'company.other.*' => ['nullable', new OtherField],
+
+            // send pdf by email through the server SMTP config (MAIL_* env vars) - optional
+            'email.to' => 'nullable|email|max:255',
+            'email.cc' => 'nullable|array|max:10',
+            'email.cc.*' => 'email|max:255',
+            'email.bcc' => 'nullable|array|max:10',
+            'email.bcc.*' => 'email|max:255',
+            'email.template' => 'nullable|string|in:default',
 
             // upload pdf into aws-s3 - optional
             's3.presigned_url' => 'nullable|string|active_url',
@@ -159,6 +168,26 @@ class InvoiceController extends Controller
 		if (isset($data['zapier']) && isset($data['zapier']['zap_url'])) {
             $storage = new Storage($doc);
             $response['zapier'] = $storage->uploadZapier($data['zapier'], $fileName, $data);
+        }
+
+        if (isset($data['email']) && isset($data['email']['to'])) {
+            $email = new Email($doc);
+            $response['email'] = $email->send(
+                $data['email'],
+                $fileName,
+                __('messages.email_subject', ['id' => $data['id'], 'company' => $data['company']['summary']]),
+                $data['company']['email'] ?? NULL,
+                [
+                    'id' => $data['id'],
+                    'company' => $data['company']['summary'],
+                    'customer' => $data['customer']['summary'],
+                    'total' => number_format($total, $decimals),
+                    'currency' => $data['currency'],
+                    'due_date' => $due_date,
+                    'purchase_order' => $purchase_order,
+                    'payment_link' => $payment_link,
+                ]
+            );
         }
 
 		if (!count($response)) {
