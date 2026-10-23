@@ -3,7 +3,9 @@
 [![tests](https://github.com/samber/invoice-as-a-service/actions/workflows/tests.yaml/badge.svg)](https://github.com/samber/invoice-as-a-service/actions/workflows/tests.yaml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-Generate a PDF invoice from one JSON `POST`. Self-host it or use the hosted endpoint.
+Create professional PDF invoices from a simple web request.
+
+Run it on your own server, or use the hosted version.
 
 ![Example invoice](example.png)
 
