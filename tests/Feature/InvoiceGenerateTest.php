@@ -145,6 +145,27 @@ class InvoiceGenerateTest extends TestCase
         $this->postJson('/api/invoice/generate', $this->payload(['purchase_order' => null]))->assertStatus(201);
     }
 
+    public function testGenerateAcceptsMaxLengthPurchaseOrder(): void
+    {
+        $this->postJson('/api/invoice/generate', $this->payload(['purchase_order' => str_repeat('a', 255)]))->assertStatus(201);
+    }
+
+    public function testGenerateAcceptsEmptyPurchaseOrder(): void
+    {
+        $this->postJson('/api/invoice/generate', $this->payload(['purchase_order' => '']))->assertStatus(201);
+    }
+
+    public function testGenerateSetsSpanishPdfSubject(): void
+    {
+        $pdf = $this->postJson('/api/invoice/generate', $this->payload(['lang' => 'es']))->getContent();
+
+        $this->assertStringContainsString(
+            $this->pdfInfoString('Subject', __('messages.metadata_subject', ['customer' => 'Customer Inc'], 'es')),
+            $pdf
+        );
+        $this->assertStringNotContainsString($this->pdfInfoString('Subject', 'Invoice for Customer Inc'), $pdf);
+    }
+
     public function testGenerateRejectsTooLongPurchaseOrder(): void
     {
         $this->postJson('/api/invoice/generate', $this->payload(['purchase_order' => str_repeat('a', 256)]))

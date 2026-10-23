@@ -323,4 +323,89 @@ class PdfSignatureTest extends TestCase
         $this->expectException(RuntimeException::class);
         PdfSigner::fromConfig()->sign('hello');
     }
+
+    public function testSignRejectsEmptyInput(): void
+    {
+        $this->configure(['cert' => $this->certPem, 'key' => $this->keyPem]);
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('startxref not found');
+        PdfSigner::fromConfig()->sign('');
+    }
+
+    public function testSignRejectsPdfWithoutClassicTrailer(): void
+    {
+        $this->configure(['cert' => $this->certPem, 'key' => $this->keyPem]);
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('trailer not found');
+        PdfSigner::fromConfig()->sign("%PDF-1.5\nstartxref\n9\n%%EOF\n");
+    }
+
+    public function testSignRejectsStartxrefPointingAwayFromXrefTable(): void
+    {
+        $unsigned = $this->generate();
+        $this->configure(['cert' => $this->certPem, 'key' => $this->keyPem]);
+        $pdf = preg_replace('/startxref\s+\d+/', "startxref\n0", $unsigned);
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('classic xref table expected');
+        PdfSigner::fromConfig()->sign($pdf);
+    }
+
+    public function testSignRejectsAlreadySignedPdf(): void
+    {
+        $this->configure(['cert' => $this->certPem, 'key' => $this->keyPem]);
+        $signed = $this->generate();
+        $this->assertTrue($this->signatureIsValid($signed), 'control: first signature must be valid');
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('unsupported trailer');
+        PdfSigner::fromConfig()->sign($signed);
+    }
+
+    public function testSignedPdfNamesTheCertificateSubject(): void
+    {
+        $this->configure(['cert' => $this->certPem, 'key' => $this->keyPem]);
+        $pdf = $this->generate();
+
+        $this->assertStringContainsString('/Name <' . strtoupper(bin2hex("\xFE\xFF" . mb_convert_encoding('Test Company Ünï', 'UTF-16BE', 'UTF-8'))) . '>', $pdf);
+    }
+
+    public function testEmptyInlineValueFallsBackToFilePath(): void
+    {
+        $this->configure([
+            'cert' => '',
+            'key' => '',
+            'cert_file_path' => $this->writeFile('cert.pem', $this->certPem),
+            'key_file_path' => $this->writeFile('key.pem', $this->keyPem),
+        ]);
+
+        $this->assertTrue($this->signatureIsValid($this->generate()));
+    }
+
+    public function testEmptyConfigValuesLeavePdfUnsigned(): void
+    {
+        $this->configure(['cert' => '', 'key' => '', 'cert_file_path' => '', 'key_file_path' => '']);
+
+        $this->assertNull(PdfSigner::fromConfig());
+        $this->assertStringNotContainsString('/adbe.pkcs7.detached', $this->generate());
+    }
+
+    public function testGenerateFailsWhenSigningIsMisconfigured(): void
+    {
+        // A half-configured signer must not silently ship an unsigned invoice.
+        $this->configure(['cert' => $this->certPem]);
+
+        $this->postJson('/api/invoice/generate', [
+            'id' => 'INV-1',
+            'currency' => 'EUR',
+            'lang' => 'en',
+            'date' => 1700000000,
+            'due_date' => 1702592000,
+            'items' => [['title' => 'Consulting', 'price' => 100, 'quantity' => 1, 'tax' => 0]],
+            'customer' => ['summary' => 'Customer Inc', 'address_line_1' => '1 Customer street'],
+            'company' => ['summary' => 'Company Inc', 'address_line_1' => '1 Company street'],
+        ])->assertStatus(500);
+    }
 }
