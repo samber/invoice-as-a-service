@@ -37,6 +37,16 @@ return [
 
     's3' => [
         'timeout' => (int) env('AWS_S3_TIMEOUT', 5),     // in seconds
-    ]
+    ],
+
+    // Digital signature of generated PDFs. Disabled when neither certificate nor key is set.
+    // Inline PEM wins over the file path.
+    'pdf_sign' => [
+        'cert' => env('PDF_SIGN_CERT'),
+        'cert_file_path' => env('PDF_SIGN_CERT_FILE_PATH'),
+        'key' => env('PDF_SIGN_KEY'),
+        'key_file_path' => env('PDF_SIGN_KEY_FILE_PATH'),
+        'key_passphrase' => env('PDF_SIGN_KEY_PASSPHRASE'),
+    ],
 
 ];
