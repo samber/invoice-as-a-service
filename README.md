@@ -1,324 +1,97 @@
-
 # Invoice as a service
 
-This service **generates professional looking PDF invoices**, from a simple POST HTTP request with json payload.
+[![tests](https://github.com/samber/invoice-as-a-service/actions/workflows/tests.yaml/badge.svg)](https://github.com/samber/invoice-as-a-service/actions/workflows/tests.yaml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-## File destinations / storage
+Generate a PDF invoice from one JSON `POST`. Self-host it or use the hosted endpoint.
 
-Rendered file can be returned into the HTTP response or exported to:
+Built with Laravel 13 and PHP 8.5, rendered with dompdf. Actively maintained, MIT licensed.
 
-- AWS S3 (and any compatible storage destination)
-- FTP server
-- Webhook
-- Email (SMTP, PDF attached)
-- **Zapier**: "Catch hook" trigger, can be linked to Drive, Dropbox...
+![Example invoice](example.png)
 
-## Demo
+[Example PDF](example.pdf)
 
-<kbd>
-    <img alt="Screenshot" src="/example.png">
-</kbd>
+## Quick start
 
-## Usage
-
-I provide `invoice-as-a-service` with a full hosted environment for fast and easy setup (endpoint: https://invoice-as-a-service.cleverapps.io).
-
-For improved privacy, you can also deploy the project on your own infrastructure for free.
-
-### Hosted
+Send the smallest valid payload to the hosted endpoint:
 
 ```sh
-$ curl "https://invoice-as-a-service.cleverapps.io/api/invoice/generate" \
-     -X POST -H "content-type: application/json" \
-     -d '{
-
-        "id": "42",
-        "currency": "€",
-        "lang": "en",
-        "date": 1520852472,
-        "due_date": 1521457272,
-        "paid": false,
-        "payment_link": "https://apple.com/user/invoices/42/pay",
-        "purchase_order": "PO-2018-0042",
-        "decimals": 2,
-        "notes": "Lorem ipsum dolor sit amet.",
-
-        "items": [
-            {
-                "title": "'Growth' plan Apple.com",
-                "description": "1 year subscription",
-                "price": 42,
-                "quantity": 1,
-                "tax": 20
-            },
-            {
-                "title": "Priority support",
-                "description": "Extra seats, billed per seat",
-                "price": 12.5,
-                "quantity": 2,
-                "tax": 20
-            }
-        ],
-
-        "customer": {
-            "summary": "John Doe",
-            "address_line_1": "Baxter Building, 42nd street, Madison Avenue",
-            "address_line_2": "Manhattan, NY, 11234",
-            "address_line_3": "United States",
-            "address_line_4": "Earth",
-            "phone": "1-888-548-0034",
-            "email": "john@gmail.com"
-        },
-
-        "company": {
-            "summary": "Apple",
-            "address_line_1": "123, place de Bretagne",
-            "address_line_2": "44000 Nantes",
-            "address_line_3": "France",
-            "address_line_4": "Earth",
-            "phone": "1-888-548-0034",
-            "email": "billing@apple.com",
-            "logo_url": "https://raw.githubusercontent.com/samber/invoice-as-a-service/master/apple-logo.png",
-            "other": [
-                "EMEA office",
-                {
-                    "title": "Business hours",
-                    "content": "9am - 6pm"
-                }
-            ]
-        },
-
-        "s3": {
-            "presigned_url": null
-        },
-
-        "ftp": {
-        	"host": "127.0.0.1",
-        	"username": "ftpuser",
-        	"password": "superSecretPassword",
-        	"path" : "/var/html/share/"
-        },
-
-        "webhook": {
-            "url": "https://webhook.example.com/invoice/store",
-            "headers": {
-                "x-token": "very-secret-token"
-            }
-        },
-
-        "zapier": {
-            "zap_url": "https://hooks.zapier.com/hooks/catch/xxxxxxx/yyyyyy",
-            "filename": "invoice-42.pdf"
-        },
-
-        "email": {
-            "to": "john@gmail.com",
-            "cc": ["accounting@gmail.com"]
-        }
-
-     }'
+curl "https://invoice-as-a-service.cleverapps.io/api/invoice/generate" \
+  -X POST -H "content-type: application/json" \
+  -o invoice.pdf \
+  -d '{
+    "id": "42",
+    "currency": "€",
+    "lang": "en",
+    "date": 1520852472,
+    "due_date": 1521457272,
+    "items": [{ "title": "Growth plan", "price": 42, "tax": 20 }],
+    "customer": { "summary": "John Doe", "address_line_1": "1 Main Street" },
+    "company": { "summary": "Acme", "address_line_1": "2 High Street" }
+  }'
 ```
 
-### Self hosted
+The response is the PDF (`201`, `application/pdf`). Open `invoice.pdf`.
+
+The hosted endpoint is run best effort, without an SLA. It receives your invoice data and any FTP or webhook credentials you put in the payload. Self-host when that matters.
+
+## Self-host
+
+Requirements: PHP 8.5 with the `gd` extension, and Composer.
 
 ```sh
-$ composer install
-$ php artisan serve
+composer install
+php artisan serve
 ```
 
-```sh
-$ curl "http://localhost:8000/api/invoice/generate" \
-     -X POST -H "content-type: application/json" \
-     -d '{ ... }'
-```
+Then run the same request against `http://localhost:8000/api/invoice/generate`.
 
-### User interface from contributor
+Optional features read their settings from environment variables. Copy `.env.dist` to `.env` and set the `MAIL_*` variables to enable email. See [PDF signature](docs/API.md#pdf-signature) for signing.
 
-Here => [crocomo2744.github.io/Invoicing-form](https://crocomo2744.github.io/Invoicing-form/)
+## Where the PDF goes
 
-## Properties
+The PDF is always returned in the HTTP response. Add an object to the payload to also send it to:
 
-| Property | Type | Required | Description | Example |
-| --- | --- | :---: | --- | --- |
-| **id** | string | yes | Your invoice reference | "42" |
-| **currency** | string | yes | Your billing currency | "€" |
-| **lang** | string | yes | Only english supported for now | "en" |
-| **tax** | float | yes | Tax percentage | 20 |
-| **date** | integer | yes | Timestamp of invoice creation date | 1520852472 |
-| **due_date** | integer | yes | Timestamp of invoice due date | 1521457272 |
-| **paid** | boolean | no | Adding a "paid" image (default: false) | false |
-| **payment_link** | string | no | Payment link | "https://<span></span>apple.com/user/invoices/42/pay" |
-| **purchase_order** | string | no | Customer purchase order reference, shown in the invoice header | "PO-2018-0042" |
-| **decimals** | integer | no | Number decimals for prices (default: 2) | 2 |
-| **notes** | string | no | Terms, conditions or anything you have to write in order to edit a valid invoice. | "Lorem ipsum dolor sit amet." |
-| **items** | array | yes | List of items | [ Item(...), Item(...) ] |
-| **customer** | object | yes | Customer infos | Customer(...) |
-| **company** | object | yes | Company infos | Company(...) |
-| **s3** | object | false | AWS S3 invoice upload | S3Upload(...) |
-| **ftp** | object | false | FTP invoice upload | FTPUpload(...) |
-| **webhook** | object | false | Webhook invoice upload | WebhookUpload(...) |
-| **zapier** | object | false | Zapier invoice upload | ZapierUpload(...) |
-| **email** | object | false | Send the invoice by email | Email(...) |
+- AWS S3, or any S3-compatible storage, through a presigned URL (`s3`)
+- an FTP server (`ftp`)
+- a webhook (`webhook`)
+- an email, with the PDF attached, through your SMTP server (`email`)
+- Zapier, through a "Catch hook" trigger, to reach Drive, Dropbox and others (`zapier`)
 
-### Item:
+## What it is not
 
-| Property | Type | Required | Description | Example |
-| --- | --- | :---: | --- | --- |
-| **title** | string | yes | Product or service name | "'Growth' plan Apple.com" |
-| **description** | string | no | Product or service description | "1 year subscription" |
-| **price** | float | yes | Product or service price | 42 |
-| **quantity** | float | no | Product or service quantity (default: 1) | 1 |
-| **tax** | float | no | Tax rate (default: 0) | 1 |
+It renders one invoice per request from the data you send. It stores no invoices, keeps no customers or invoice numbers, and computes no payments. Use an accounting tool for those.
 
-### Customer:
+## Reference
 
-| Property | Type | Required | Description | Example |
-| --- | --- | :---: | --- | --- |
-| **summary** | string | yes | Organisation or customer name | "John Doe" |
-| **address_line_1** | string | yes | Customer address, line 1 | "Baxter Building, 42nd street, Madison Avenue" |
-| **address_line_2** | string | no | Customer address, line 2 | "Manhattan, NY, 11234" |
-| **address_line_3** | string | no | Customer address, line 3 | "United States" |
-| **address_line_4** | string | no | Customer address, line 4 | "Earth" |
-| **phone** | string | no | Customer phone number | "1-888-548-0034" |
-| **email** | string | no | Customer email address | "john@gmail.com" |
-| **siret** (deprecated) | string | no | French company identification number | "539 138 107 00021" |
-| **other** | array of mixed string and Other() | no | Customer additional infos | [ String, Other(), ... ] |
-
-### Company:
-
-| Property | Type | Required | Description | Example |
-| --- | --- | :---: | --- | --- |
-| **summary** | string | yes | Your organisation name | "Apple" |
-| **address_line_1** | string | yes | Customer address, line 1 | "123, place de Bretagne" |
-| **address_line_2** | string | no | Customer address, line 2 | "44000 Nantes" |
-| **address_line_3** | string | no | Customer address, line 3 | "France" |
-| **address_line_4** | string | no | Customer address, line 4 | "Earth" |
-| **phone** | string | no | Customer phone number | "1-888-548-0034" |
-| **email** | string | no | Customer email address | "billing@apple.com" |
-| **logo_url** | string | no | URL of your company logo | "https://<span></span>acme.corp/logo.png" |
-| **logo_b64** | string | no | Base64 encoded image of your company logo | "data:image/png;base64,........." |
-| **siret** (deprecated) | string | no | French company identification number | "539 138 107 00021" |
-| **other** | array of mixed string and Other() | no | Company additional infos | [ String, Other(), ... ] |
-
-### customer.other[].* and company.other[].*
-
-`customer.other` and `company.other` fields are arrays of mixed type: simple string or the following object:
-
-| Property | Type | Required | Description | Example |
-| --- | --- | :---: | --- | --- |
-| **title** | string | true | Field name | "Twitter handle" |
-| **content** | string | true | Field value | "@foobar" |
-
-### S3 upload
-
-| Property | Type | Required | Description | Example |
-| --- | --- | :---: | --- | --- |
-| **presigned_url** | string | false | Presigned AWS S3 upload url | "https://<span></span>my-bucket.s3.eu-central-1.amazonaws.com/201807250018--foobar@example.com.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=xxxx&X-Amz-Date=xxxx&X-Amz-Expires=xxxx&X-Amz-Signature=xxxx&X-Amz-SignedHeaders=host" |
-
-### FTP upload
-
-| Property | Type | Required | Description | Example |
-| --- | --- | :---: | --- | --- |
-| **host** | string | true | The host, IP Address of the server | "ftp.example.com" |
-| **username** | string | true | The ftp username to connect | "john" |
-| **password** | string | true | The ftp password of the user you are trying to connect | "test1234" |
-| **port** | integer | false | The port used to connect, default is 21. | 21 |
-| **ssl** | boolean | false | If the connection supports SSL mention that here, default is false. | true |
-| **passive** | boolean | false | If it should use a passive connection, default is true. | true |
-| **path** | string | true | The full path on the server where you want the invoice to be uploaded. | "/home/john/share" |
-
-### Webhook upload
-
-| Property | Type | Required | Description | Example |
-| --- | --- | :---: | --- | --- |
-| **url** | string | true | The URL of the destination webhook | "https://webhook.example.com/invoice/store" |
-| **headers** | object | false | These headers will be inserted into webhook request | { "x-token": "very-secret-token" } |
-
-### Zapier upload
-
-| Property | Type | Required | Description | Example |
-| --- | --- | :---: | --- | --- |
-| **zap_url** | string | true | URL of Zapier Hook | "https://hooks.zapier.com/hooks/catch/xxxxxxx/yyyyyy" |
-| **filename** | string | false | Filename that will be provided into Zapier Hook | "invoice-42.pdf" |
-
-### Email
-
-The PDF is attached to an email sent through the server's SMTP account. SMTP credentials are never part of the request: the operator sets them with the `MAIL_*` environment variables (see `.env.dist`). Subject and body are fixed server side and translated according to `lang`. `Reply-To` is `company.email` when set.
-
-| Property | Type | Required | Description | Example |
-| --- | --- | :---: | --- | --- |
-| **to** | string | true | Recipient address | "john@gmail.com" |
-| **cc** | array | false | Up to 10 copy recipients | ["accounting@gmail.com"] |
-| **bcc** | array | false | Up to 10 blind copy recipients | ["archive@apple.com"] |
-| **template** | string | false | Email template name (default: "default") | "default" |
-
-The response is JSON, like other destinations: `{"email": {"sent": true, "message": null, "recipients": [...]}}`. A mail failure returns `sent: false` and the error `message`, with HTTP 201.
-
-## Notes
-
-The provided logo_url (optional) must be accessible from the `invoice-as-a-service` API !
-
-### PDF metadata
-
-Every generated PDF carries these document properties:
-
-- **Title**: `Invoice <id>` (localized)
-- **Author**: `company.summary`
-- **Subject**: `Invoice for <customer.summary>` (localized)
-- **Creator** and **Producer**: `invoice-as-a-service`
-- **CreationDate** and **ModDate**: generation time, in UTC (not the invoice `date`)
-
-### PDF signature
-
-The operator can sign every generated PDF with a server-side key. The signature is never part of the request. It is an invisible CMS signature (`adbe.pkcs7.detached`, added as a PDF incremental update), so PDF readers show the document as signed and warn about any later edit. Without a key, the PDF is not signed.
-
-Set a certificate and its private key, both PEM encoded, with environment variables:
-
-| Variable | Description |
-| --- | --- |
-| **PDF_SIGN_CERT** | X.509 certificate, as plain text (`\n` accepted instead of real newlines) |
-| **PDF_SIGN_CERT_FILE_PATH** | Path to the certificate file, used when `PDF_SIGN_CERT` is empty |
-| **PDF_SIGN_KEY** | Private key, as plain text |
-| **PDF_SIGN_KEY_FILE_PATH** | Path to the private key file, used when `PDF_SIGN_KEY` is empty |
-| **PDF_SIGN_KEY_PASSPHRASE** | Passphrase of the private key (optional) |
-
-- Signing is on as soon as a certificate and a key are set. Nothing set means no signing.
-- Only one of the two set, an unreadable file, a wrong passphrase or a key that does not match the certificate fails the request with a server error. An invoice is never silently sent unsigned.
-- A self-signed certificate works, but readers show it as untrusted. Use a certificate from a CA trusted by your readers (for example an Adobe Approved Trust List one) to get a green check.
-
-Generate a self-signed pair for testing:
-
-```sh
-openssl req -x509 -newkey rsa:3072 -nodes -days 365 -subj "/CN=My Company" -keyout sign.key -out sign.crt
-PDF_SIGN_CERT_FILE_PATH=sign.crt PDF_SIGN_KEY_FILE_PATH=sign.key
-```
-
-Check a signed PDF with `pdfsig invoice.pdf` (poppler) or Adobe Reader.
+- [API reference](docs/API.md): every property, destination option, PDF metadata and PDF signature.
+- [Invoice form](https://crocomo2744.github.io/Invoicing-form/): a user interface by a contributor.
 
 ## Contribute
 
-Hell yeah!
+Issues and pull requests are welcome. Where to start:
 
-Clone + pull-request.
-
-I usually reply in hours or days ;)
-
-Magic happens here:
 - template: `resources/views/invoices/default.blade.php`
-- controller + input validation: `app/Http/Controllers/InvoiceController.php`
-- pdf build: `app/Helpers/PDF.php`
-- invoice storage: `app/Helpers/Storage.php`
+- controller and input validation: `app/Http/Controllers/InvoiceController.php`
+- PDF build: `app/Helpers/PDF.php`
+- file storage: `app/Helpers/Storage.php`
 
-### AWS S3 - Generate presigned upload url:
+Run the tests with `vendor/bin/phpunit`.
+
+Generate a presigned S3 upload URL for testing:
 
 ```sh
-$ aws configure
-$ node ./scripts/presign-upload-url.js <region> <my-bucket> invoices/201807250018--foobar@example.com.pdf
+aws configure
+node ./scripts/presign-upload-url.js <region> <my-bucket> invoices/201807250018--foobar@example.com.pdf
 ```
 
-### Update dependencies
+Update dependencies:
 
-```bash
-$ composer outdated -D
-$ composer update <package-name> --with-dependencies
+```sh
+composer outdated -D
+composer update <package-name> --with-dependencies
 ```
+
+## License
+
+[MIT](LICENSE)

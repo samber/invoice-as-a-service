@@ -1,0 +1,161 @@
+# API reference
+
+Endpoint: `POST /api/invoice/generate`, JSON body. See the [README](../README.md) for a quick start.
+
+## Request properties
+
+| Property           | Type    | Required | Description                                                                       | Example                                               |
+| ------------------ | ------- | :------: | --------------------------------------------------------------------------------- | ----------------------------------------------------- |
+| **id**             | string  |   yes    | Your invoice reference                                                            | "42"                                                  |
+| **currency**       | string  |   yes    | Your billing currency                                                             | "€"                                                   |
+| **lang**           | string  |   yes    | Invoice language: `en` or `es`                                                    | "en"                                                  |
+| **date**           | integer |   yes    | Timestamp of invoice creation date                                                | 1520852472                                            |
+| **due_date**       | integer |   yes    | Timestamp of invoice due date                                                     | 1521457272                                            |
+| **paid**           | boolean |    no    | Adding a "paid" image (default: false)                                            | false                                                 |
+| **payment_link**   | string  |    no    | Payment link                                                                      | "https://<span></span>apple.com/user/invoices/42/pay" |
+| **purchase_order** | string  |    no    | Customer purchase order reference, shown in the invoice header                    | "PO-2018-0042"                                        |
+| **decimals**       | integer |    no    | Number decimals for prices (default: 2)                                           | 2                                                     |
+| **notes**          | string  |    no    | Terms, conditions or anything you have to write in order to edit a valid invoice. | "Lorem ipsum dolor sit amet."                         |
+| **items**          | array   |   yes    | List of items                                                                     | [ Item(...), Item(...) ]                              |
+| **customer**       | object  |   yes    | Customer infos                                                                    | Customer(...)                                         |
+| **company**        | object  |   yes    | Company infos                                                                     | Company(...)                                          |
+| **s3**             | object  |    no    | AWS S3 invoice upload                                                             | S3Upload(...)                                         |
+| **ftp**            | object  |    no    | FTP invoice upload                                                                | FTPUpload(...)                                        |
+| **webhook**        | object  |    no    | Webhook invoice upload                                                            | WebhookUpload(...)                                    |
+| **zapier**         | object  |    no    | Zapier invoice upload                                                             | ZapierUpload(...)                                     |
+| **email**          | object  |    no    | Send the invoice by email                                                         | Email(...)                                            |
+
+### Item
+
+| Property        | Type   | Required | Description                              | Example                   |
+| --------------- | ------ | :------: | ---------------------------------------- | ------------------------- |
+| **title**       | string |   yes    | Product or service name                  | "'Growth' plan Apple.com" |
+| **description** | string |    no    | Product or service description           | "1 year subscription"     |
+| **price**       | float  |   yes    | Product or service price                 | 42                        |
+| **quantity**    | float  |    no    | Product or service quantity (default: 1) | 1                         |
+| **tax**         | float  |   yes    | Tax rate, in percent                     | 20                        |
+
+### Customer
+
+| Property               | Type                              | Required | Description                          | Example                                        |
+| ---------------------- | --------------------------------- | :------: | ------------------------------------ | ---------------------------------------------- |
+| **summary**            | string                            |   yes    | Organisation or customer name        | "John Doe"                                     |
+| **address_line_1**     | string                            |   yes    | Customer address, line 1             | "Baxter Building, 42nd street, Madison Avenue" |
+| **address_line_2**     | string                            |    no    | Customer address, line 2             | "Manhattan, NY, 11234"                         |
+| **address_line_3**     | string                            |    no    | Customer address, line 3             | "United States"                                |
+| **address_line_4**     | string                            |    no    | Customer address, line 4             | "Earth"                                        |
+| **phone**              | string                            |    no    | Customer phone number                | "1-888-548-0034"                               |
+| **email**              | string                            |    no    | Customer email address               | "john@gmail.com"                               |
+| **siret** (deprecated) | string                            |    no    | French company identification number | "539 138 107 00021"                            |
+| **other**              | array of mixed string and Other() |    no    | Customer additional infos            | [ String, Other(), ... ]                       |
+
+### Company
+
+| Property               | Type                              | Required | Description                               | Example                                   |
+| ---------------------- | --------------------------------- | :------: | ----------------------------------------- | ----------------------------------------- |
+| **summary**            | string                            |   yes    | Your organisation name                    | "Apple"                                   |
+| **address_line_1**     | string                            |   yes    | Company address, line 1                   | "123, place de Bretagne"                  |
+| **address_line_2**     | string                            |    no    | Company address, line 2                   | "44000 Nantes"                            |
+| **address_line_3**     | string                            |    no    | Company address, line 3                   | "France"                                  |
+| **address_line_4**     | string                            |    no    | Company address, line 4                   | "Earth"                                   |
+| **phone**              | string                            |    no    | Company phone number                      | "1-888-548-0034"                          |
+| **email**              | string                            |    no    | Company email address                     | "billing@apple.com"                       |
+| **logo_url**           | string                            |    no    | URL of your company logo                  | "https://<span></span>acme.corp/logo.png" |
+| **logo_b64**           | string                            |    no    | Base64 encoded image of your company logo | "data:image/png;base64,........."         |
+| **siret** (deprecated) | string                            |    no    | French company identification number      | "539 138 107 00021"                       |
+| **other**              | array of mixed string and Other() |    no    | Company additional infos                  | [ String, Other(), ... ]                  |
+
+### customer.other[].* and company.other[].*
+
+`customer.other` and `company.other` fields are arrays of mixed type: simple string or the following object:
+
+| Property    | Type   | Required | Description | Example          |
+| ----------- | ------ | :------: | ----------- | ---------------- |
+| **title**   | string |   yes    | Field name  | "Twitter handle" |
+| **content** | string |   yes    | Field value | "@foobar"        |
+
+### S3 upload
+
+| Property          | Type   | Required | Description                 | Example                                                                                                                                                                                                                                     |
+| ----------------- | ------ | :------: | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **presigned_url** | string |    no    | Presigned AWS S3 upload url | "https://<span></span>my-bucket.s3.eu-central-1.amazonaws.com/201807250018--foobar@example.com.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=xxxx&X-Amz-Date=xxxx&X-Amz-Expires=xxxx&X-Amz-Signature=xxxx&X-Amz-SignedHeaders=host" |
+
+### FTP upload
+
+| Property     | Type    | Required | Description                                                            | Example            |
+| ------------ | ------- | :------: | ---------------------------------------------------------------------- | ------------------ |
+| **host**     | string  |   yes    | The host, IP Address of the server                                     | "ftp.example.com"  |
+| **username** | string  |   yes    | The ftp username to connect                                            | "john"             |
+| **password** | string  |   yes    | The ftp password of the user you are trying to connect                 | "test1234"         |
+| **port**     | integer |    no    | The port used to connect, default is 21.                               | 21                 |
+| **ssl**      | boolean |    no    | If the connection supports SSL mention that here, default is false.    | true               |
+| **passive**  | boolean |    no    | If it should use a passive connection, default is true.                | true               |
+| **path**     | string  |   yes    | The full path on the server where you want the invoice to be uploaded. | "/home/john/share" |
+
+### Webhook upload
+
+| Property    | Type   | Required | Description                                         | Example                                     |
+| ----------- | ------ | :------: | --------------------------------------------------- | ------------------------------------------- |
+| **url**     | string |   yes    | The URL of the destination webhook                  | "https://webhook.example.com/invoice/store" |
+| **headers** | object |    no    | These headers will be inserted into webhook request | { "x-token": "very-secret-token" }          |
+
+### Zapier upload
+
+| Property     | Type   | Required | Description                                     | Example                                               |
+| ------------ | ------ | :------: | ----------------------------------------------- | ----------------------------------------------------- |
+| **zap_url**  | string |   yes    | URL of Zapier Hook                              | "https://hooks.zapier.com/hooks/catch/xxxxxxx/yyyyyy" |
+| **filename** | string |    no    | Filename that will be provided into Zapier Hook | "invoice-42.pdf"                                      |
+
+### Email
+
+The PDF is attached to an email sent through the server's SMTP account. SMTP credentials are never part of the request: the operator sets them with the `MAIL_*` environment variables (see `.env.dist`). Subject and body are fixed server side and translated according to `lang`. `Reply-To` is `company.email` when set.
+
+| Property     | Type   | Required | Description                                        | Example                  |
+| ------------ | ------ | :------: | -------------------------------------------------- | ------------------------ |
+| **to**       | string |    no    | Recipient address. The email is skipped when empty | "john@gmail.com"         |
+| **cc**       | array  |    no    | Up to 10 copy recipients                           | ["accounting@gmail.com"] |
+| **bcc**      | array  |    no    | Up to 10 blind copy recipients                     | ["archive@apple.com"]    |
+| **template** | string |    no    | Email template name (default: "default")           | "default"                |
+
+The response is JSON, like other destinations: `{"email": {"sent": true, "message": null, "recipients": [...]}}`. A mail failure returns `sent: false` and the error `message`, with HTTP 201.
+
+## Notes
+
+`company.logo_url` must be reachable from the server running `invoice-as-a-service`. Use `company.logo_b64` to send the image inline.
+
+### PDF metadata
+
+Every generated PDF carries these document properties:
+
+- **Title**: `Invoice <id>` (localized)
+- **Author**: `company.summary`
+- **Subject**: `Invoice for <customer.summary>` (localized)
+- **Creator** and **Producer**: `invoice-as-a-service`
+- **CreationDate** and **ModDate**: generation time, in UTC (not the invoice `date`)
+
+### PDF signature
+
+The operator can sign every generated PDF with a server-side key. The signature is never part of the request. It is an invisible CMS signature (`adbe.pkcs7.detached`, added as a PDF incremental update), so PDF readers show the document as signed and warn about any later edit. Without a key, the PDF is not signed.
+
+Set a certificate and its private key, both PEM encoded, with environment variables:
+
+| Variable                    | Description                                                               |
+| --------------------------- | ------------------------------------------------------------------------- |
+| **PDF_SIGN_CERT**           | X.509 certificate, as plain text (`\n` accepted instead of real newlines) |
+| **PDF_SIGN_CERT_FILE_PATH** | Path to the certificate file, used when `PDF_SIGN_CERT` is empty          |
+| **PDF_SIGN_KEY**            | Private key, as plain text                                                |
+| **PDF_SIGN_KEY_FILE_PATH**  | Path to the private key file, used when `PDF_SIGN_KEY` is empty           |
+| **PDF_SIGN_KEY_PASSPHRASE** | Passphrase of the private key (optional)                                  |
+
+- Signing is on as soon as a certificate and a key are set. Nothing set means no signing.
+- Only one of the two set, an unreadable file, a wrong passphrase or a key that does not match the certificate fails the request with a server error. An invoice is never silently sent unsigned.
+- A self-signed certificate works, but readers show it as untrusted. Use a certificate from a CA trusted by your readers (for example an Adobe Approved Trust List one) to get a green check.
+
+Generate a self-signed pair for testing:
+
+```sh
+openssl req -x509 -newkey rsa:3072 -nodes -days 365 -subj "/CN=My Company" -keyout sign.key -out sign.crt
+PDF_SIGN_CERT_FILE_PATH=sign.crt PDF_SIGN_KEY_FILE_PATH=sign.key
+```
+
+Check a signed PDF with `pdfsig invoice.pdf` (poppler) or Adobe Reader.
