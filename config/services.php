@@ -36,7 +36,7 @@ return [
     // ],
 
     's3' => [
-        'timeout' => getenv('AWS_S3_TIMEOUT', 5),       // in seconds
+        'timeout' => (int) env('AWS_S3_TIMEOUT', 5),     // in seconds
     ]
 
 ];

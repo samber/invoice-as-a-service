@@ -133,7 +133,7 @@
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $item['title'] }}</td>
-                        <td>{{ $item['description'] }}</td>
+                        <td>{{ $item['description'] ?? '' }}</td>
                         <td>{{ $item['quantity'] }}</td>
                         <td>{{ $item['price'] }} {{ $data->currency }}</td>
                         <td>{{ $item['tax'] }} %</td>
