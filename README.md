@@ -48,6 +48,13 @@ $ curl "https://invoice-as-a-service.cleverapps.io/api/invoice/generate" \
                 "price": 42,
                 "quantity": 1,
                 "tax": 20
+            },
+            {
+                "title": "Priority support",
+                "description": "Extra seats, billed per seat",
+                "price": 12.5,
+                "quantity": 2,
+                "tax": 20
             }
         ],
 
