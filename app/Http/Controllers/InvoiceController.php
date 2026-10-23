@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\App;
 use App\Helpers\PDF;
 use App\Helpers\Storage;
 use App\Helpers\Email;
+use App\Helpers\Delivery;
 use App\Helpers\NumberFormat;
 use App\Rules\NumberFormatExample;
 use App\Rules\OtherField;
@@ -20,7 +21,17 @@ class InvoiceController extends Controller
 {
     public function generate(Request $request)
     {
-        $data = $request->all();
+        // Webhook and Zapier receive the request as the caller sent it: the instance-wide delivery
+        // settings merged below hold credentials (FTP password...) that must not leave the server.
+        $requestData = $request->all();
+
+        if (!Delivery::perRequestEnabled() && ($channels = Delivery::channelsInBody($requestData))) {
+            return response()->json([
+                'delivery' => ['Delivery settings in the request body are disabled on this instance: ' . implode(', ', $channels)],
+            ], 422);
+        }
+
+        $data = Delivery::withDefaults($requestData);
         $validator = Validator::make($data, [
             // required
             'id' => 'required|string|max:255',
@@ -169,12 +180,12 @@ class InvoiceController extends Controller
 
 		if (isset($data['webhook']) && isset($data['webhook']['url'])) {
             $storage = new Storage($doc);
-            $response['webhook'] = $storage->uploadWebhook($data['webhook'], $fileName, $data);
+            $response['webhook'] = $storage->uploadWebhook($data['webhook'], $fileName, $requestData);
         }
 
 		if (isset($data['zapier']) && isset($data['zapier']['zap_url'])) {
             $storage = new Storage($doc);
-            $response['zapier'] = $storage->uploadZapier($data['zapier'], $fileName, $data);
+            $response['zapier'] = $storage->uploadZapier($data['zapier'], $fileName, $requestData);
         }
 
         if (isset($data['email']) && isset($data['email']['to'])) {
