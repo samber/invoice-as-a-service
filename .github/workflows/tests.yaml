@@ -1,0 +1,31 @@
+name: tests
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  phpunit:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # 8.2 is the version pinned in the Dockerfile.
+        php: ["8.2", "8.3"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          # gd is required by dompdf, ftp by the FTP upload, pcov by the coverage report.
+          extensions: gd, ftp, mbstring, dom, pcov
+          coverage: pcov
+
+      - run: composer install --no-interaction --no-progress --prefer-dist
+
+      - run: vendor/bin/phpunit --coverage-text
