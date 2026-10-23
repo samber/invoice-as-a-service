@@ -14,8 +14,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # 8.2 is the version pinned in the Dockerfile.
-        php: ["8.2", "8.3"]
+        # Keep in sync with the Dockerfile base image.
+        php: ["8.5"]
     steps:
       - uses: actions/checkout@v4
 

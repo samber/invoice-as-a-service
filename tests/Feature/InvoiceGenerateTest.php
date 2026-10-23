@@ -142,6 +142,14 @@ class InvoiceGenerateTest extends TestCase
             ->assertJsonPath('ftp.path', null);
     }
 
+    public function testApiErrorsRenderAsJsonWithoutAcceptHeader(): void
+    {
+        $response = $this->call('POST', '/api/does-not-exist');
+
+        $response->assertStatus(404);
+        $this->assertStringContainsString('application/json', $response->headers->get('Content-Type'));
+    }
+
     public function testCorsPreflightIsAllowed(): void
     {
         $this->call('OPTIONS', '/api/invoice/generate', [], [], [], [
