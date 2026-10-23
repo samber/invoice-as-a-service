@@ -45,6 +45,8 @@ curl "https://invoice-as-a-service.cleverapps.io/api/invoice/generate" \
 
 The response is **the PDF** (`201`, `application/pdf`). Open `invoice.pdf`.
 
+Every other property (items, taxes, logo, extra fields, destinations) is in the [full API reference](docs/API.md).
+
 The hosted endpoint is run **best effort, without an SLA**. It receives your invoice data and any FTP or webhook credentials you put in the payload. **Self-host when that matters.**
 
 ## Self-host
