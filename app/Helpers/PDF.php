@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\View;
 
 class PDF
 {
+    // Identifies this service as the tool that generated the document, in the PDF info dictionary.
+    private const GENERATOR = 'invoice-as-a-service';
 
     public $id;
     public $currency;
@@ -68,8 +70,23 @@ class PDF
         $pdf->setHttpContext($context);
         $pdf->loadHtml(View::make('invoices.'.$template, ['data' => $this]));
         $pdf->render();
+        $this->addMetadata($pdf);
 
         return $pdf->output();
+    }
+
+    // Dompdf already sets Title (from the template <title>) and defaults Producer and the dates;
+    // override them so the PDF names this service and the dates are UTC at generation time.
+    private function addMetadata(Dompdf $pdf): void
+    {
+        $now = 'D:' . gmdate('YmdHis') . "+00'00'";
+
+        $pdf->addInfo('Author', $this->company['summary']);
+        $pdf->addInfo('Subject', __('messages.metadata_subject', ['customer' => $this->customer['summary']]));
+        $pdf->addInfo('Creator', self::GENERATOR);
+        $pdf->addInfo('Producer', self::GENERATOR);
+        $pdf->addInfo('CreationDate', $now);
+        $pdf->addInfo('ModDate', $now);
     }
 
     public function toString()

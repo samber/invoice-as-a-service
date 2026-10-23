@@ -25,6 +25,7 @@ return [
     'summary_subtotal' => 'Subtotal',
     'summary_taxes' => 'Taxes',
     'summary_total' => 'Total (including Taxes)',
+    'metadata_subject' => 'Invoice for :customer',
     'email_subject' => 'Invoice :id from :company',
     'email_greeting' => 'Hello :customer,',
     'email_intro' => 'Please find attached invoice :id from :company.',
