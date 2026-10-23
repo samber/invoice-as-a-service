@@ -151,10 +151,10 @@
                                 <div class="desc">{{ $item['description'] }}</div>
                             @endif
                         </td>
-                        <td class="right">{{ $item['quantity'] }}</td>
-                        <td class="right">{{ $item['price'] }} {{ $data->currency }}</td>
-                        <td class="right">{{ $item['tax'] }} %</td>
-                        <td class="right">{{ $item['total'] }} {{ $data->currency }}</td>
+                        <td class="right">{{ $data->number($item['quantity']) }}</td>
+                        <td class="right">{{ $data->price($item['price']) }} {{ $data->currency }}</td>
+                        <td class="right">{{ $data->number($item['tax']) }} %</td>
+                        <td class="right">{{ $data->amount($item['total']) }} {{ $data->currency }}</td>
                     </tr>
                 @endforeach
             </tbody>
@@ -172,15 +172,15 @@
                     <table class="totals">
                         <tr>
                             <td>@lang('messages.summary_subtotal')</td>
-                            <td class="right">{{ $data->sub_total }} {{ $data->currency }}</td>
+                            <td class="right">{{ $data->amount($data->sub_total) }} {{ $data->currency }}</td>
                         </tr>
                         <tr>
                             <td>@lang('messages.summary_taxes')</td>
-                            <td class="right">{{ $data->tax_total }} {{ $data->currency }}</td>
+                            <td class="right">{{ $data->amount($data->tax_total) }} {{ $data->currency }}</td>
                         </tr>
                         <tr class="grand">
                             <td>@lang('messages.summary_total')</td>
-                            <td class="right">{{ $data->total }} {{ $data->currency }}</td>
+                            <td class="right">{{ $data->amount($data->total) }} {{ $data->currency }}</td>
                         </tr>
                     </table>
                 </td>

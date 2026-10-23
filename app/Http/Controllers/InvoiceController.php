@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\App;
 use App\Helpers\PDF;
 use App\Helpers\Storage;
 use App\Helpers\Email;
+use App\Helpers\Delivery;
+use App\Helpers\NumberFormat;
+use App\Rules\NumberFormatExample;
 use App\Rules\OtherField;
 use App\Rules\Base64Image;
 
@@ -18,7 +21,17 @@ class InvoiceController extends Controller
 {
     public function generate(Request $request)
     {
-        $data = $request->all();
+        // Webhook and Zapier receive the request as the caller sent it: the instance-wide delivery
+        // settings merged below hold credentials (FTP password...) that must not leave the server.
+        $requestData = $request->all();
+
+        if (!Delivery::perRequestEnabled() && ($channels = Delivery::channelsInBody($requestData))) {
+            return response()->json([
+                'delivery' => ['Delivery settings in the request body are disabled on this instance: ' . implode(', ', $channels)],
+            ], 422);
+        }
+
+        $data = Delivery::withDefaults($requestData);
         $validator = Validator::make($data, [
             // required
             'id' => 'required|string|max:255',
@@ -32,6 +45,7 @@ class InvoiceController extends Controller
             // optional
             'purchase_order' => 'nullable|string|max:255',
             'decimals' => 'nullable|integer|min:0|max:10',
+            'number_format' => ['nullable', 'string', new NumberFormatExample()],
             'notes' => 'nullable|string|max:65535',
 
             // items
@@ -106,7 +120,9 @@ class InvoiceController extends Controller
         $purchase_order = !array_key_exists('purchase_order', $data) || $data['purchase_order'] == NULL ? NULL : $data['purchase_order'];
         $notes = !array_key_exists('notes', $data) || $data['notes'] == NULL ? NULL : $data['notes'];
         $decimals = !array_key_exists('decimals', $data) || $data['decimals'] == NULL ? 2 : $data['decimals'];
-        
+
+        $number_format = NumberFormat::resolve($data['number_format'] ?? NULL);
+
         $lang = $data['lang'];
         App::setLocale($lang);
 
@@ -142,7 +158,9 @@ class InvoiceController extends Controller
             $data['company'],
             $sub_total,
             $tax_total,
-            $total
+            $total,
+            $decimals,
+            $number_format
         );
 
         $doc = $pdf->build('default');
@@ -162,12 +180,12 @@ class InvoiceController extends Controller
 
 		if (isset($data['webhook']) && isset($data['webhook']['url'])) {
             $storage = new Storage($doc);
-            $response['webhook'] = $storage->uploadWebhook($data['webhook'], $fileName, $data);
+            $response['webhook'] = $storage->uploadWebhook($data['webhook'], $fileName, $requestData);
         }
 
 		if (isset($data['zapier']) && isset($data['zapier']['zap_url'])) {
             $storage = new Storage($doc);
-            $response['zapier'] = $storage->uploadZapier($data['zapier'], $fileName, $data);
+            $response['zapier'] = $storage->uploadZapier($data['zapier'], $fileName, $requestData);
         }
 
         if (isset($data['email']) && isset($data['email']['to'])) {
@@ -181,7 +199,7 @@ class InvoiceController extends Controller
                     'id' => $data['id'],
                     'company' => $data['company']['summary'],
                     'customer' => $data['customer']['summary'],
-                    'total' => number_format($total, $decimals),
+                    'total' => NumberFormat::format($total, $decimals, $number_format),
                     'currency' => $data['currency'],
                     'due_date' => $due_date,
                     'purchase_order' => $purchase_order,

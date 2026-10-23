@@ -80,7 +80,7 @@ It renders one invoice per request from the data you send. It **stores no invoic
 
 ## Reference
 
-- [API reference](docs/API.md): every property, destination option, PDF metadata and PDF signature.
+- [API reference](docs/API.md): every property, destination option, instance-wide delivery settings, PDF metadata and PDF signature.
 
 ## Contribute
 
@@ -90,6 +90,7 @@ Issues and pull requests are welcome. Where to start:
 - controller and input validation: `app/Http/Controllers/InvoiceController.php`
 - PDF build: `app/Helpers/PDF.php`
 - file storage: `app/Helpers/Storage.php`
+- instance-wide delivery settings: `config/delivery.php` and `app/Helpers/Delivery.php`
 
 Run the tests with `vendor/bin/phpunit`.
 

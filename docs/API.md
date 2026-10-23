@@ -208,6 +208,42 @@ The PDF is attached to an email sent through the server's SMTP account. SMTP cre
 
 The response is JSON, like other destinations: `{"email": {"sent": true, "message": null, "recipients": [...]}}`. A mail failure returns `sent: false` and the error `message`, with HTTP 201.
 
+### Instance-wide delivery settings
+
+By default every destination is configured per request, in the JSON body. An operator can also configure destinations for the whole instance with `DELIVERY_*` environment variables, and lock the request body out of delivery entirely.
+
+```sh
+# Run every invoice through this FTP server and this mailbox, whatever the request says
+DELIVERY_FTP_HOST=ftp.example.com
+DELIVERY_FTP_USERNAME=john
+DELIVERY_FTP_PASSWORD=test1234
+DELIVERY_FTP_PATH=/home/john/share
+DELIVERY_EMAIL_TO=accounting@example.com
+
+# Reject any `s3`, `ftp`, `webhook`, `zapier` or `email` object in the request body
+DELIVERY_PER_REQUEST_ENABLED=false
+```
+
+| Variable                                                                            | Default | Description                                                                                                                                                                                                                                                                                        |
+| ----------------------------------------------------------------------------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `DELIVERY_PER_REQUEST_ENABLED`                                                      | `true`  | When `false`, a request carrying `s3`, `ftp`, `webhook`, `zapier` or `email` values is rejected with HTTP 422 and only the instance destinations run. Unset or empty keeps it enabled. Any value other than `true`/`1`/`on`/`yes` disables it, so a typo locks the instance instead of opening it. |
+| `DELIVERY_FTP_HOST`, `_PORT`, `_SSL`, `_PASSIVE`, `_USERNAME`, `_PASSWORD`, `_PATH` | unset   | Same fields as [FTP upload](#ftp-upload).                                                                                                                                                                                                                                                          |
+| `DELIVERY_WEBHOOK_URL`, `DELIVERY_WEBHOOK_HEADERS`                                  | unset   | Same fields as [Webhook upload](#webhook-upload). Headers are a JSON object: `{"x-token":"secret"}`. Invalid JSON fails every request with HTTP 500.                                                                                                                                               |
+| `DELIVERY_ZAPIER_URL`, `DELIVERY_ZAPIER_FILENAME`                                   | unset   | `zap_url` and `filename` of [Zapier upload](#zapier-upload).                                                                                                                                                                                                                                       |
+| `DELIVERY_EMAIL_TO`, `_CC`, `_BCC`, `_TEMPLATE`                                     | unset   | Same fields as [Email](#email). `CC` and `BCC` are comma-separated. SMTP credentials stay in the `MAIL_*` variables.                                                                                                                                                                               |
+
+How settings combine:
+
+- A destination runs when its key field is set, either in the environment or in the request: `ftp.host`, `webhook.url`, `zapier.zap_url`, `email.to`, `s3.presigned_url`.
+- A field in the request body wins over the environment value of the same field. Other environment fields still apply: a request that sends only `ftp.password` reuses the instance host, username and path.
+- A list or object field (`email.cc`, `webhook.headers`) is replaced as a whole, never appended.
+- A `null` field in the request counts as absent. `false` and `0` are real values.
+- Blank environment variables count as unset.
+- Merged settings go through the same validation as a request body, so an invalid environment value returns HTTP 422.
+- There is no S3 variable: a presigned URL is signed for a single object, so it only makes sense per request.
+- With an environment destination configured, every invoice is delivered to it. A request cannot opt out.
+- Webhook and Zapier receive the request body as the caller sent it, without the instance settings, so instance credentials are never forwarded.
+
 ## Notes
 
 `company.logo_url` must be reachable from the server running `invoice-as-a-service`. Use `company.logo_b64` to send the image inline.
