@@ -13,6 +13,7 @@ use App\Helpers\Storage;
 use App\Helpers\Email;
 use App\Helpers\Delivery;
 use App\Helpers\NumberFormat;
+use App\Rules\PublicUrl;
 use App\Rules\NumberFormatExample;
 use App\Rules\OtherField;
 use App\Rules\Base64Image;
@@ -75,8 +76,8 @@ class InvoiceController extends Controller
             'company.address_line_4' => 'nullable|string|min:1|max:255',
             'company.phone' => 'nullable|string|min:3|max:255',
             'company.email' => 'nullable|email|min:3|max:255',
-            'company.logo' => 'nullable|string|max:255',    // @Deprecated
-            'company.logo_url' => 'nullable|string|max:255',
+            'company.logo' => ['nullable', 'string', 'max:255', new PublicUrl()],    // @Deprecated
+            'company.logo_url' => ['nullable', 'string', 'max:255', new PublicUrl()],
             'company.logo_b64' => ['nullable', new Base64Image(['png', 'jpg', 'jpeg', 'gif', 'bmp'])],
             'company.siret' => 'nullable|string|min:3|max:255',    // @Deprecated
             'company.other.*' => ['nullable', new OtherField],
